@@ -235,7 +235,6 @@ class _CartScreenState extends State<CartScreen> {
             
       // Bottom Blue Sticky Bar
       bottomNavigationBar: Container(
-        height: 110, // Gives enough room for safe padding if required
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).padding.bottom + 15,
           left: 30,
@@ -251,6 +250,7 @@ class _CartScreenState extends State<CartScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

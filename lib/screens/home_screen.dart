@@ -534,12 +534,13 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  int quantity = 0;
 
   @override
   void initState() {
     super.initState();
-    quantity = widget.product.inCart ? 1 : 0;
+    if (widget.product.quantity == 0 && widget.product.inCart) {
+       widget.product.quantity = 1;
+    }
   }
 
   @override
@@ -644,7 +645,7 @@ class _ProductCardState extends State<ProductCard> {
                             TextSpan(
                               text:
                                   (product.price *
-                                          (quantity > 0 ? quantity : 1))
+                                          (product.quantity > 0 ? product.quantity : 1))
                                       .toStringAsFixed(2),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -658,9 +659,9 @@ class _ProductCardState extends State<ProductCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (quantity == 0)
+                    if (product.quantity == 0)
                       GestureDetector(
-                        onTap: () => setState(() => quantity = 1),
+                        onTap: () => setState(() => product.quantity = 1),
                         child: Container(
                           width: 32,
                           height: 32,
@@ -681,7 +682,7 @@ class _ProductCardState extends State<ProductCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           GestureDetector(
-                            onTap: () => setState(() => quantity--),
+                            onTap: () => setState(() => product.quantity--),
                             child: Container(
                               width: 26,
                               height: 26,
@@ -699,7 +700,7 @@ class _ProductCardState extends State<ProductCard> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 6),
                             child: Text(
-                              '$quantity',
+                              '${product.quantity}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
@@ -707,7 +708,7 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => setState(() => quantity++),
+                            onTap: () => setState(() => product.quantity++),
                             child: Container(
                               width: 26,
                               height: 26,
@@ -763,6 +764,7 @@ class Product {
   final String discount;
   final bool inCart;
   final String category;
+  int quantity;
 
   Product({
     required this.id,
@@ -773,6 +775,7 @@ class Product {
     this.discount = "-25%",
     this.inCart = false,
     required this.category,
+    this.quantity = 0,
   });
 }
 

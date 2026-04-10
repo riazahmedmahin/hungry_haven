@@ -125,7 +125,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                     children: [
                       TextSpan(
-                        text: '\$${product.price}', // use accurate product price
+                        text: '\$${(product.price * (product.quantity > 0 ? product.quantity : 1)).toStringAsFixed(2)}', // dynamically multiplies from global Product state
                         style: const TextStyle(color: Color(0xFF4A4A4A), fontSize: 24, fontWeight: FontWeight.w900),
                       ),
                     ],
