@@ -2,26 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 final List<Map<String, String>> categoryData = [
-  {
-    "title": "Fruits",
-    "image": "https://pngimg.com/d/mango_PNG9173.png",
-  },
-  {
-    "title": "Drinks",
-    "image": "https://pngimg.com/d/cocktail_PNG62.png",
-  },
-  {
-    "title": "All",
-    "image": "https://pngimg.com/d/burger_sandwich_PNG4135.png",
-  },
-  {
-    "title": "Snack",
-    "image": "https://pngimg.com/d/potato_chips_PNG45.png",
-  },
-  {
-    "title": "Food",
-    "image": "https://pngimg.com/d/pizza_PNG44077.png",
-  },
+  {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
+  {"title": "Drinks", "image": "https://pngimg.com/d/cocktail_PNG62.png"},
+  {"title": "All", "image": "https://pngimg.com/d/burger_sandwich_PNG4135.png"},
+  {"title": "Snack", "image": "https://pngimg.com/d/potato_chips_PNG45.png"},
+  {"title": "Food", "image": "https://pngimg.com/d/pizza_PNG44077.png"},
 ];
 
 class HomeScreen extends StatefulWidget {
@@ -37,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     String currentCategoryStr = categoryData[selectedCategoryIndex]["title"]!;
-    
+
     // Filter products dynamically based on category
     List<Product> displayedProducts = newDemoProducts.where((p) {
       if (currentCategoryStr == "All") return true;
@@ -62,14 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Circular huge curved background simulating the ellipse backdrop
                   Positioned(
-                    top: 40, 
+                    top: 40,
                     left: -150,
                     right: -150,
                     bottom: 0,
                     child: Container(
                       decoration: const BoxDecoration(
                         color: Color(0xFFF9F9F9),
-                        borderRadius: BorderRadius.vertical(top: Radius.elliptical(800, 250)),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.elliptical(800, 250),
+                        ),
                       ),
                     ),
                   ),
@@ -113,7 +100,10 @@ class TopBar extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.grey.shade100,
             ),
-            child: const Icon(Icons.airport_shuttle_outlined, color: Colors.black87),
+            child: const Icon(
+              Icons.airport_shuttle_outlined,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -145,7 +135,11 @@ class TopBar extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.grey.shade300),
             ),
-            child: const Icon(Icons.notifications_none, color: Colors.black87, size: 22),
+            child: const Icon(
+              Icons.notifications_none,
+              color: Colors.black87,
+              size: 22,
+            ),
           ),
           const SizedBox(width: 8),
           Stack(
@@ -157,7 +151,11 @@ class TopBar extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Icon(Icons.shopping_bag_outlined, color: Colors.black87, size: 22),
+                child: const Icon(
+                  Icons.shopping_bag_outlined,
+                  color: Colors.black87,
+                  size: 22,
+                ),
               ),
               Positioned(
                 top: -2,
@@ -170,7 +168,11 @@ class TopBar extends StatelessWidget {
                   ),
                   child: const Text(
                     "3",
-                    style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -241,7 +243,10 @@ class SearchAndFilter extends StatelessWidget {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Search for fast food...",
-                  hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 14,
+                  ),
                   prefixIcon: const Padding(
                     padding: EdgeInsets.only(left: 20, right: 12),
                     child: Icon(Icons.search, color: Colors.black45, size: 24),
@@ -290,7 +295,9 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
   void initState() {
     super.initState();
     // Start with the currently selected item snapped smoothly to the center
-    _scrollController = ScrollController(initialScrollOffset: widget.selectedIndex * itemWidth);
+    _scrollController = ScrollController(
+      initialScrollOffset: widget.selectedIndex * itemWidth,
+    );
   }
 
   @override
@@ -306,7 +313,6 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
       child: AnimatedBuilder(
         animation: _scrollController,
         builder: (context, child) {
-          
           double offset = 0;
           if (_scrollController.hasClients) {
             offset = _scrollController.offset;
@@ -320,7 +326,8 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
             physics: const BouncingScrollPhysics(),
             // Ensure first and last items can reach exactly the horizontal center
             padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width / 2 - (itemWidth / 2),
+              horizontal:
+                  MediaQuery.of(context).size.width / 2 - (itemWidth / 2),
             ),
             itemCount: categoryData.length,
             itemBuilder: (context, index) {
@@ -331,7 +338,8 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
               // Calculate a dynamic arc vertical drop based on distance
               // k * curve^2 creates a stunning smooth arc
               double shift = math.pow((distance / 120), 2) * 25;
-              if (shift > 90) shift = 90; // Clamp so items don't sink infinitely
+              if (shift > 90)
+                shift = 90; // Clamp so items don't sink infinitely
 
               return SizedBox(
                 width: itemWidth,
@@ -398,8 +406,10 @@ class CategoryItem extends StatelessWidget {
             ),
             child: Image.network(
               data["image"]!,
-              fit: BoxFit.contain, // Transparent images perfectly rendered natively
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.local_dining, color: Colors.grey),
+              fit: BoxFit
+                  .contain, // Transparent images perfectly rendered natively
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.local_dining, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 8),
@@ -421,8 +431,7 @@ class CategoryItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-          if (!isActive)
-            const SizedBox(height: 3),
+          if (!isActive) const SizedBox(height: 3),
         ],
       ),
     );
@@ -431,7 +440,7 @@ class CategoryItem extends StatelessWidget {
 
 class PopularFoodGrid extends StatelessWidget {
   final List<Product> products;
-  
+
   const PopularFoodGrid({super.key, required this.products});
 
   @override
@@ -440,11 +449,14 @@ class PopularFoodGrid extends StatelessWidget {
       return const Padding(
         padding: EdgeInsets.all(40.0),
         child: Center(
-          child: Text("No items available in this category.", style: TextStyle(color: Colors.grey)),
+          child: Text(
+            "No items available in this category.",
+            style: TextStyle(color: Colors.grey),
+          ),
         ),
       );
     }
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GridView.builder(
@@ -455,7 +467,7 @@ class PopularFoodGrid extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 30, // Large spacing for highly overgrown images
           crossAxisSpacing: 20,
-          childAspectRatio: 0.60, 
+          childAspectRatio: 0.60,
         ),
         itemBuilder: (context, index) {
           return ProductCard(product: products[index]);
@@ -477,8 +489,15 @@ class ProductCard extends StatelessWidget {
       children: [
         // Main Background Card
         Container(
-          margin: const EdgeInsets.only(top: 80), // Push the box deeply to allow full image out-of-bounds rendering
-          padding: const EdgeInsets.only(top: 55, left: 16, right: 16, bottom: 16),
+          margin: const EdgeInsets.only(
+            top: 80,
+          ), // Push the box deeply to allow full image out-of-bounds rendering
+          padding: const EdgeInsets.only(
+            top: 55,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -492,25 +511,35 @@ class ProductCard extends StatelessWidget {
             ],
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, 
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Discount Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF1F1F1F),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   product.discount,
-                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               // Title
               Text(
                 product.title,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -534,11 +563,19 @@ class ProductCard extends StatelessWidget {
                       children: [
                         const TextSpan(
                           text: "\$ ",
-                          style: TextStyle(color: Color(0xFFFF6A42), fontWeight: FontWeight.bold, fontSize: 13),
+                          style: TextStyle(
+                            color: Color(0xFFFF6A42),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
                         TextSpan(
                           text: product.price.toStringAsFixed(2),
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19, color: Colors.black),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 19,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -547,9 +584,13 @@ class ProductCard extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: product.inCart ? const Color(0xFF1F1F1F) : Colors.white,
+                      color: product.inCart
+                          ? const Color(0xFF1F1F1F)
+                          : Colors.white,
                       shape: BoxShape.circle,
-                      border: product.inCart ? null : Border.all(color: Colors.grey.shade300),
+                      border: product.inCart
+                          ? null
+                          : Border.all(color: Colors.grey.shade300),
                     ),
                     child: Icon(
                       product.inCart ? Icons.remove : Icons.add,
@@ -562,7 +603,7 @@ class ProductCard extends StatelessWidget {
             ],
           ),
         ),
-        // FULL FLOATING IMAGE 
+        // FULL FLOATING IMAGE
         Positioned(
           top: -15, // aggressive overlap
           child: Image.network(
@@ -634,7 +675,8 @@ List<Product> newDemoProducts = [
     id: 3,
     title: "Classic Cheeseburger",
     subtitle: "Beef Combo",
-    image: "https://static.vecteezy.com/system/resources/previews/022/484/505/non_2x/tasty-burger-on-transparent-background-png.png",
+    image:
+        "https://static.vecteezy.com/system/resources/previews/022/484/505/non_2x/tasty-burger-on-transparent-background-png.png",
     price: 12.50,
     discount: "-10%",
     inCart: false,
@@ -654,7 +696,8 @@ List<Product> newDemoProducts = [
     id: 5,
     title: "Fresh Mango",
     subtitle: "Organic Fruit",
-    image: "https://static.vecteezy.com/system/resources/previews/010/856/649/non_2x/a-basket-of-fruits-transparent-background-png.png",
+    image:
+        "https://static.vecteezy.com/system/resources/previews/010/856/649/non_2x/a-basket-of-fruits-transparent-background-png.png",
     price: 3.50,
     discount: "-10%",
     inCart: false,
@@ -664,7 +707,8 @@ List<Product> newDemoProducts = [
     id: 6,
     title: "Mojito Splash",
     subtitle: "Mint & Lime",
-    image: "https://static.vecteezy.com/system/resources/previews/009/887/309/non_2x/glass-of-lemonade-with-lemon-and-mint-png.png",
+    image:
+        "https://static.vecteezy.com/system/resources/previews/009/887/309/non_2x/glass-of-lemonade-with-lemon-and-mint-png.png",
     price: 4.10,
     discount: "-20%",
     inCart: false,
@@ -674,7 +718,8 @@ List<Product> newDemoProducts = [
     id: 7,
     title: "Potato Chips",
     subtitle: "Crunchy Snack",
-    image: "https://static.vecteezy.com/system/resources/previews/008/848/438/non_2x/potato-chips-falling-on-glass-bowl-png.png",
+    image:
+        "https://static.vecteezy.com/system/resources/previews/008/848/438/non_2x/potato-chips-falling-on-glass-bowl-png.png",
     price: 2.50,
     discount: "New",
     inCart: false,
