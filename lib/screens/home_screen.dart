@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'product_details_screen.dart';
 
 final List<Map<String, String>> categoryData = [
   {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
@@ -475,10 +476,14 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.topCenter,
-      children: [
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(product: product)));
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
+        children: [
         // Main Background Card
         Container(
           margin: const EdgeInsets.only(
@@ -615,6 +620,7 @@ class ProductCard extends StatelessWidget {
           ),
         ),
       ],
+    ),
     );
   }
 }
@@ -716,5 +722,15 @@ List<Product> newDemoProducts = [
     discount: "New",
     inCart: false,
     category: "Snack",
+  ),
+  Product(
+    id: 7,
+    title: "Pizza Sicilia",
+    subtitle: "Pizza Sicilia",
+    image: "https://pngimg.com/d/pizza_PNG44077.png",
+    price: 8.99,
+    discount: "-25%",
+    inCart: true,
+    category: "Food",
   ),
 ];
