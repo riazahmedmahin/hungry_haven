@@ -45,6 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 30),
               Stack(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Catagory"),
+                  ),
                   // Circular huge curved background simulating the ellipse backdrop
                   Positioned(
                     top: 40,
@@ -94,24 +98,12 @@ class TopBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey.shade100,
-            ),
-            child: const Icon(
-              Icons.airport_shuttle_outlined,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Delivery to",
+                  "Hi!Jhon",
                   style: TextStyle(
                     color: Colors.grey.shade500,
                     fontSize: 12,
@@ -119,7 +111,7 @@ class TopBar extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  "11/2 Diriyah, Riyadh",
+                  "11/2 Agrabad,Chittagong",
                   style: TextStyle(
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
