@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'home_screen.dart'; // To access the Product model. Ideally Product should be in a separate models file.
+import 'cart_screen.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final Product product;
@@ -147,7 +148,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 // Add to cart button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF5D5D),
                     foregroundColor: Colors.white,
