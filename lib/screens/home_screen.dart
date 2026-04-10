@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           });
                         },
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 0),
                       PopularFoodGrid(products: displayedProducts),
                       const SizedBox(height: 40),
                     ],
@@ -309,7 +309,7 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: 200,
       child: AnimatedBuilder(
         animation: _scrollController,
         builder: (context, child) {
