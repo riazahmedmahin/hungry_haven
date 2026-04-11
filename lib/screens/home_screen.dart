@@ -4,6 +4,7 @@ import 'product_details_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
 import 'favorite_screen.dart';
+import 'order_screen.dart';
 
 final List<Map<String, String>> categoryData = [
   {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
@@ -77,6 +78,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: const Icon(
                   Icons.favorite_border,
+                  color: Colors.grey,
+                  size: 24,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OrderScreen(),
+                    ),
+                  ).then((_) => setState(() {}));
+                },
+                child: const Icon(
+                  Icons.receipt_long_outlined,
                   color: Colors.grey,
                   size: 24,
                 ),
@@ -806,13 +822,6 @@ class _ProductCardState extends State<ProductCard> {
                           product.quantity = 1;
                           product.inCart = true;
                         });
-                        // Immediately go to cart as requested
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CartScreen(),
-                          ),
-                        );
                       },
                       child: Container(
                         width: 32,
