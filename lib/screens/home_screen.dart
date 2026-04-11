@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                       builder: (context) => const FavoriteScreen(),
                     ),
-                  );
+                  ).then((_) => setState(() {}));
                 },
                 child: const Icon(
                   Icons.favorite_border,
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const CartScreen()),
-                  );
+                  ).then((_) => setState(() {}));
                 },
                 child: const Icon(
                   Icons.shopping_cart_outlined,
@@ -249,9 +249,9 @@ class TopBar extends StatelessWidget {
                       color: Color(0xFFFF6A42),
                       shape: BoxShape.circle,
                     ),
-                    child: const Text(
-                      "3",
-                      style: TextStyle(
+                    child: Text(
+                      newDemoProducts.where((p) => p.quantity > 0 || p.inCart).length.toString(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -802,6 +802,10 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        setState(() {
+                          product.quantity = 1;
+                          product.inCart = true;
+                        });
                         // Immediately go to cart as requested
                         Navigator.push(
                           context,
@@ -876,7 +880,7 @@ class Product {
   final String image;
   final double price;
   final String discount;
-  final bool inCart;
+  bool inCart;
   final String category;
   int quantity;
   bool isFavorite;
@@ -970,15 +974,5 @@ List<Product> newDemoProducts = [
     discount: "New",
     inCart: false,
     category: "Snack",
-  ),
-  Product(
-    id: 7,
-    title: "Pizza Sicilia",
-    subtitle: "Pizza Sicilia",
-    image: "https://pngimg.com/d/pizza_PNG44077.png",
-    price: 8.99,
-    discount: "-25%",
-    inCart: true,
-    category: "Food",
   ),
 ];

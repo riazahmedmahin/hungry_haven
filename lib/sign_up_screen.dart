@@ -22,73 +22,104 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text('Register', style: TextStyle(color: Colors.black87)),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 8),
-                const Text('Create account', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('Fill the form to create an account', style: TextStyle(color: Colors.grey.shade600)),
-                const SizedBox(height: 16),
-
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildField(hint: 'Name', icon: Icons.person_outline),
-                      const SizedBox(height: 12),
-                      _buildField(hint: 'Email', icon: Icons.email_outlined),
-                      const SizedBox(height: 12),
-                      _buildField(hint: 'Password', icon: Icons.lock_outline, obscure: true),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // register action
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1976D2),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: const Text('Register',style: TextStyle(color: Colors.white),),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Create Account',
+                          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      const SizedBox(height: 18),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _socialBox('https://cdn-icons-png.flaticon.com/128/281/281764.png'),
-                          const SizedBox(width: 12),
-                          _socialBox('https://cdn-icons-png.flaticon.com/128/0/747.png'),
-                        ],
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          'Fill the form to create an account',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                        const SizedBox(height: 30),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              _buildField(hint: 'Name', icon: Icons.person_outline),
+                              const SizedBox(height: 12),
+                              _buildField(hint: 'Email', icon: Icons.email_outlined),
+                              const SizedBox(height: 12),
+                              _buildField(
+                                hint: 'Password',
+                                icon: Icons.lock_outline,
+                                obscure: true,
+                              ),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // register action
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF1976D2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: const Text('Register', style: TextStyle(color: Colors.white)),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _socialBox(
+                                    'https://cdn-icons-png.flaticon.com/128/281/281764.png',
+                                  ),
+                                  const SizedBox(width: 12),
+                                  _socialBox(
+                                    'https://cdn-icons-png.flaticon.com/128/0/747.png',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an account? ',
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: const Text(
+                                'Sign in',
+                                style: TextStyle(
+                                  color: Color(0xFF1976D2),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Already have an account? ', style: TextStyle(color: Colors.grey.shade600)),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: const Text('Sign in', style: TextStyle(color: Color(0xFF1976D2), fontWeight: FontWeight.w600)),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
-        ),
+              ),
+            );
+          },
         ),
       ),
+
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'order_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -112,7 +113,11 @@ class ProfileScreen extends StatelessWidget {
                   _buildProfileOption(
                     title: "Order History",
                     icon: Icons.history_outlined,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const OrderScreen()),
+                      );
+                    },
                   ),
                   _buildProfileOption(
                     title: "Settings",
