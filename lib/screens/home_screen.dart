@@ -65,11 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 24,
                 ),
               ),
-              const Icon(
-                Icons.favorite_border,
-                color: Colors.grey,
-                size: 24,
-              ),
+              const Icon(Icons.favorite_border, color: Colors.grey, size: 24),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -82,15 +78,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.grey,
                   size: 24,
                 ),
-               ),
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
                   );
                 },
-                child: const Icon(Icons.person_outline, color: Colors.grey, size: 24),
+                child: const Icon(
+                  Icons.person_outline,
+                  color: Colors.grey,
+                  size: 24,
+                ),
               ),
             ],
           ),
@@ -109,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const HeaderText(),
               const SizedBox(height: 24),
               const SearchAndFilter(),
+              const SizedBox(height: 24),
+              const OfferBanner(),
               const SizedBox(height: 30),
               Stack(
                 children: [
@@ -338,6 +342,110 @@ class SearchAndFilter extends StatelessWidget {
   }
 }
 
+class OfferBanner extends StatelessWidget {
+  const OfferBanner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        height: 150,
+        decoration: BoxDecoration(
+          // Vibrant gradient matching the mockup aesthetic
+          gradient: const LinearGradient(
+            colors: [Color(0xFFFF9472), Color(0xFFFF6A42)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFF6A42).withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Rotated food image for a dynamic pop-out effect
+            Positioned(
+              right: -10,
+              top: -15,
+              bottom: -15,
+              child: Transform.rotate(
+                angle: 0.1,
+                child: Image.network(
+                  'https://pngimg.com/d/burger_sandwich_PNG4135.png',
+                  width: 160,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            // Text and CTA
+            Positioned(
+              left: 20,
+              top: 0,
+              bottom: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 10,
+                  //     vertical: 4,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white.withOpacity(0.2),
+                  //     borderRadius: BorderRadius.circular(10),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Discount\n25% Off",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFFFF6A42),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
+                      minimumSize: const Size(0, 36),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "Order Now",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CategoryArcScrollable extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onCategoryChanged;
@@ -551,12 +659,11 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-
   @override
   void initState() {
     super.initState();
     if (widget.product.quantity == 0 && widget.product.inCart) {
-       widget.product.quantity = 1;
+      widget.product.quantity = 1;
     }
   }
 
@@ -662,7 +769,9 @@ class _ProductCardState extends State<ProductCard> {
                             TextSpan(
                               text:
                                   (product.price *
-                                          (product.quantity > 0 ? product.quantity : 1))
+                                          (product.quantity > 0
+                                              ? product.quantity
+                                              : 1))
                                       .toStringAsFixed(2),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
