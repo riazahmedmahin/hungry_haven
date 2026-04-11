@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'product_details_screen.dart';
 import 'cart_screen.dart';
+import 'profile_screen.dart';
 
 final List<Map<String, String>> categoryData = [
   {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const Icon(
                 Icons.favorite_border,
-                color: Colors.white54,
+                color: Colors.grey,
                 size: 24,
               ),
               GestureDetector(
@@ -78,11 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: const Icon(
                   Icons.shopping_cart_outlined,
-                  color: Colors.white54,
+                  color: Colors.grey,
                   size: 24,
                 ),
+               ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  );
+                },
+                child: const Icon(Icons.person_outline, color: Colors.grey, size: 24),
               ),
-              const Icon(Icons.person_outline, color: Colors.white54, size: 24),
             ],
           ),
         ),

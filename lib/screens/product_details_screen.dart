@@ -134,6 +134,20 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 const SizedBox(height: 16),
                 
+                // Extra Food Details
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildInfoChip(Icons.star, "4.8", Colors.amber),
+                    const SizedBox(width: 16),
+                    _buildInfoChip(Icons.local_fire_department, "450 kcal", Colors.redAccent),
+                    const SizedBox(width: 16),
+                    _buildInfoChip(Icons.access_time_filled, "20 min", Colors.blueAccent),
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+                
                 // Description (could also be dynamic, leaving static matched to mocked image for now)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -256,6 +270,31 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoChip(IconData icon, String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 4),
+          Text(text, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black87)),
         ],
       ),
     );
