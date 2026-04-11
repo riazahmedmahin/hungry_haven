@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      extendBody: false,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         type: BottomNavigationBarType.fixed,
@@ -55,12 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
               screen = const FavoriteScreen();
               break;
             case 2:
-              screen = const OrderScreen();
-              break;
-            case 3:
               screen = const CartScreen();
               break;
-            case 4:
+            case 3:
               screen = const ProfileScreen();
               break;
             default:
@@ -76,10 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border),
             label: "Favorites",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long_outlined),
-            label: "Orders",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),

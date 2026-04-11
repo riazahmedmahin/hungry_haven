@@ -184,16 +184,33 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 80.0),
-          child: Image.asset(
-            'assets/Screenshot 2026-04-07 at 11.14.37 PM.png',
-            height: 280,
-            width: 280,
-            fit: BoxFit.contain,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 80.0),
+              child: Image.asset(
+                'assets/Screenshot 2026-04-07 at 11.14.37 PM.png',
+                height: 280,
+                width: 280,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 50,
+            child: Text(
+              'v.1.1.1',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
