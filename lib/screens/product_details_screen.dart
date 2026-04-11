@@ -3,12 +3,26 @@ import 'dart:math' as math;
 import 'home_screen.dart'; // To access the Product model. Ideally Product should be in a separate models file.
 import 'cart_screen.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   final Product product;
   const ProductDetailsScreen({super.key, required this.product});
 
   @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.product.quantity == 0) {
+      widget.product.quantity = 1;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -160,25 +174,60 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 const SizedBox(height: 20),
                 
-                // Add to cart button
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF5D5D),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                // Quantity Selector & Add to cart button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Quantity
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5))
+                        ]
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove, size: 20),
+                            onPressed: () {
+                              if (product.quantity > 1) {
+                                setState(() => product.quantity--);
+                              }
+                            },
+                          ),
+                          Text('${product.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          IconButton(
+                            icon: const Icon(Icons.add, size: 20),
+                            onPressed: () => setState(() => product.quantity++),
+                          ),
+                        ],
+                      ),
                     ),
-                    elevation: 5,
-                    shadowColor: const Color(0xFFFF5D5D).withOpacity(0.5),
-                  ),
-                  child: const Text(
-                    "Add to cart",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                    const SizedBox(width: 16),
+                    // Add to cart
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF5D5D),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        elevation: 5,
+                        shadowColor: const Color(0xFFFF5D5D).withOpacity(0.5),
+                      ),
+                      child: const Text(
+                        "Add to cart",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
                 
                 const Spacer(),
