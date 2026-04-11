@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'home_screen.dart'; // To access the Product model. Ideally Product should be in a separate models file.
 import 'cart_screen.dart';
+import 'checkout_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Product product;
@@ -359,7 +360,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CartScreen()),
+                MaterialPageRoute(
+                  builder: (context) => CheckoutScreen(
+                    totalAmount:
+                        product.price *
+                        (product.quantity > 0 ? product.quantity : 1),
+                  ),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
