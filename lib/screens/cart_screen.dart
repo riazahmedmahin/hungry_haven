@@ -193,7 +193,7 @@ class _CartScreenState extends State<CartScreen> {
                               const SizedBox(height: 12),
                               // Price 
                               Text(
-                                '\$${item.price.toInt()}', // The mockup shows clean integer prices
+                                '\$${(item.price * item.quantity).toInt()}', // Calculated total for this specific item
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w900, 
                                   fontSize: 18, 

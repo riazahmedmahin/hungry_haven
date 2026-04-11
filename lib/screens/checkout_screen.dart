@@ -13,6 +13,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double deliveryFee = 6.00;
+    double finalTotal = widget.totalAmount + deliveryFee;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
@@ -33,7 +36,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // Payment Methods Card
             Container(
               padding: const EdgeInsets.all(15),
@@ -45,7 +48,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     color: Colors.black.withOpacity(0.03),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
-                  )
+                  ),
                 ],
               ),
               child: Column(
@@ -56,83 +59,82 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png",
                     "Mastercard",
                   ),
-                  const Divider(height: 30),
+                  const Divider(height: 20),
                   _paymentOption(
                     "Bkash",
-                    "017********",
-                    "https://i.postimg.cc/kXG0q5H8/Group-162.png",
+                    "Personal Account",
+                    "https://logos-world.net/wp-content/uploads/2020/11/Bkash-Logo.png",
                     "Bkash",
                   ),
-                  const Divider(height: 30),
+                  const Divider(height: 20),
                   _paymentOption(
                     "Nagad",
-                    "019********",
+                    "Personal Account",
                     "https://seeklogo.com/images/N/nagad-logo-7A70BC397E-seeklogo.com.png",
                     "Nagad",
                   ),
-                  const Divider(height: 30),
+                  const Divider(height: 20),
                   _paymentOption(
                     "Cash on delivery",
                     "Pay when you get it",
                     "https://cdn-icons-png.flaticon.com/512/1554/1554401.png",
                     "CashOnDelivery",
                   ),
-                  const SizedBox(height: 15),
                 ],
               ),
             ),
-
-            const SizedBox(height: 30),
-            const Text(
-              "Order Summary",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
             ),
-            const SizedBox(height: 15),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  _summaryRow("Order Amount", widget.totalAmount.toStringAsFixed(2)),
-                  _summaryRow("Promo-code", "2.20", isNegative: true),
-                  _summaryRow("Delivery", "6.00"),
-                  _summaryRow("Tax", "2.00"),
-                  const Divider(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Total Amount",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "\$ ${(widget.totalAmount - 2.20 + 6.00 + 2.00).toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _summaryRow("Order Amount", widget.totalAmount.toStringAsFixed(2)),
+            _summaryRow("Delivery", deliveryFee.toStringAsFixed(2)),
+            const Divider(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Total Amount",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "\$ ${finalTotal.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFFFF5D5D),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
-              height: 60,
+              height: 55,
               child: ElevatedButton(
                 onPressed: () => _showSuccessDialog(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A1A1A),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  elevation: 5,
                 ),
                 child: const Text(
                   "Pay Now",
@@ -140,14 +142,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
 
-  Widget _paymentOption(String title, String subtitle, String iconUrl, String value) {
+  Widget _paymentOption(
+    String title,
+    String subtitle,
+    String iconUrl,
+    String value,
+  ) {
     bool isSelected = selectedPayment == value;
     return GestureDetector(
       onTap: () {
@@ -156,22 +162,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        color: Colors.transparent, // Ensures the entire row is clickable
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        color: Colors.transparent,
         child: Row(
           children: [
             Container(
               width: 50,
-              height: 50,
-              padding: const EdgeInsets.all(10),
+              height: 40,
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Image.network(
                 iconUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.payment, color: Colors.grey),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.payment, color: Colors.grey),
               ),
             ),
             const SizedBox(width: 15),
@@ -181,7 +187,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   Text(
                     subtitle,
@@ -192,7 +201,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             Icon(
               isSelected ? Icons.check_circle : Icons.circle_outlined,
-              color: isSelected ? Colors.black : Colors.grey.shade300,
+              color: isSelected
+                  ? const Color.fromARGB(255, 31, 30, 30)
+                  : Colors.grey.shade300,
             ),
           ],
         ),
@@ -202,11 +213,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _summaryRow(String label, String value, {bool isNegative = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 15)),
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+          ),
           Text(
             "${isNegative ? "-\$" : "\$"}$value",
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
@@ -238,7 +252,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
-                    )
+                    ),
                   ],
                 ),
                 child: const Icon(Icons.check, size: 50, color: Colors.black),
@@ -261,16 +275,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/home', (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A1A1A),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text("Go Home", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Go Home",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
@@ -285,10 +304,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     foregroundColor: Colors.black87,
                     backgroundColor: Colors.grey.shade100,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text("Track your order", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Track your order",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'product_details_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'favorite_screen.dart';
 
 final List<Map<String, String>> categoryData = [
   {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
@@ -65,7 +66,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 24,
                 ),
               ),
-              const Icon(Icons.favorite_border, color: Colors.grey, size: 24),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FavoriteScreen(),
+                    ),
+                  );
+                },
+                child: const Icon(
+                  Icons.favorite_border,
+                  color: Colors.grey,
+                  size: 24,
+                ),
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -785,72 +800,30 @@ class _ProductCardState extends State<ProductCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (product.quantity == 0)
-                      GestureDetector(
-                        onTap: () => setState(() => product.quantity = 1),
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey.shade300),
+                    GestureDetector(
+                      onTap: () {
+                        // Immediately go to cart as requested
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CartScreen(),
                           ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 20,
-                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF1F1F1F),
+                          shape: BoxShape.circle,
                         ),
-                      )
-                    else
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: () => setState(() => product.quantity--),
-                            child: Container(
-                              width: 26,
-                              height: 26,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1F1F1F),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: Text(
-                              '${product.quantity}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => setState(() => product.quantity++),
-                            child: Container(
-                              width: 26,
-                              height: 26,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1F1F1F),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ],
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       ),
+                    ),
                   ],
                 ),
               ],
@@ -875,6 +848,21 @@ class _ProductCardState extends State<ProductCard> {
               ),
             ),
           ),
+          // Heart Icon for Favorites
+          Positioned(
+            top: 90,
+            right: 15,
+            child: GestureDetector(
+              onTap: () {
+                setState(() => product.isFavorite = !product.isFavorite);
+              },
+              child: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: product.isFavorite ? Colors.red : Colors.grey.shade400,
+                size: 20,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -891,6 +879,7 @@ class Product {
   final bool inCart;
   final String category;
   int quantity;
+  bool isFavorite;
 
   Product({
     required this.id,
@@ -902,6 +891,7 @@ class Product {
     this.inCart = false,
     required this.category,
     this.quantity = 0,
+    this.isFavorite = false,
   });
 }
 
