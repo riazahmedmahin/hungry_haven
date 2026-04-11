@@ -354,7 +354,7 @@ class OfferBanner extends StatelessWidget {
         decoration: BoxDecoration(
           // Vibrant gradient matching the mockup aesthetic
           gradient: const LinearGradient(
-            colors: [Color(0xFFFF9472), Color(0xFFFF6A42)],
+            colors: [Color(0xFFFF9472), Color.fromARGB(255, 255, 57, 2)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

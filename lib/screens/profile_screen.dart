@@ -13,12 +13,19 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black87,
+            size: 20,
+          ),
         ),
         title: const Text(
           "Profile",
           style: TextStyle(
-              color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 22),
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -45,7 +52,8 @@ class ProfileScreen extends StatelessWidget {
                       ],
                       image: const DecorationImage(
                         image: NetworkImage(
-                            'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'), // Placeholder avatar
+                          'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                        ), // Placeholder avatar
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -83,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
 
             // Options List
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
                   _buildProfileOption(
@@ -115,8 +123,9 @@ class ProfileScreen extends StatelessWidget {
                   // Logout Button
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil('/signin', (route) => false);
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil('/signin', (route) => false);
                     },
                     child: Container(
                       width: double.infinity,
@@ -128,7 +137,11 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.logout, color: Colors.red.shade400, size: 20),
+                          Icon(
+                            Icons.logout,
+                            color: Colors.red.shade400,
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             "Log Out",
@@ -178,7 +191,7 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.black.withOpacity(0.05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
-                  )
+                  ),
                 ],
               ),
               child: Icon(icon, color: Colors.black87, size: 20),
