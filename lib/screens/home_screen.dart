@@ -916,10 +916,9 @@ List<Product> newDemoProducts = [
   ),
   Product(
     id: 3,
-    title: "Classic Cheeseburger",
+    title: "Classic Cheese Burger",
     subtitle: "Beef Combo",
-    image:
-        "https://static.vecteezy.com/system/resources/previews/022/484/505/non_2x/tasty-burger-on-transparent-background-png.png",
+    image: "https://pngimg.com/d/burger_sandwich_PNG4135.png",
     price: 12.50,
     discount: "-10%",
     inCart: false,
@@ -937,21 +936,19 @@ List<Product> newDemoProducts = [
   ),
   Product(
     id: 5,
-    title: "Fresh Mango",
+    title: "Chiken Shorma",
     subtitle: "Organic Fruit",
-    image:
-        "https://static.vecteezy.com/system/resources/previews/010/856/649/non_2x/a-basket-of-fruits-transparent-background-png.png",
+    image: "https://www.pngmart.com/files/23/Food-PNG-Isolated-HD.png",
     price: 3.50,
     discount: "-10%",
     inCart: false,
-    category: "Fruits",
+    category: "Food",
   ),
   Product(
     id: 6,
-    title: "Mojito Splash",
-    subtitle: "Mint & Lime",
-    image:
-        "https://static.vecteezy.com/system/resources/previews/009/887/309/non_2x/glass-of-lemonade-with-lemon-and-mint-png.png",
+    title: "Orange Juice",
+    subtitle: "Fresh & Lime",
+    image: "https://purepng.com/public/uploads/large/drinks-wra.png",
     price: 4.10,
     discount: "-20%",
     inCart: false,
@@ -959,13 +956,13 @@ List<Product> newDemoProducts = [
   ),
   Product(
     id: 7,
-    title: "Potato Chips",
+    title: "Fish Fry",
     subtitle: "Crunchy Snack",
     image:
-        "https://static.vecteezy.com/system/resources/previews/008/848/438/non_2x/potato-chips-falling-on-glass-bowl-png.png",
+        "https://purepng.com/public/uploads/large/purepng.com-fried-fishfood-fish-tasty-dish-cook-eat-fried-seafood-fry-spicy-recipe-941524618184u09tn.png",
     price: 2.50,
     discount: "New",
     inCart: false,
-    category: "Snack",
+    category: "Food",
   ),
 ];
