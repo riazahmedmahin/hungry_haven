@@ -241,6 +241,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         'total': widget.totalAmount + 6.00,
         'items': cartItems.map((p) => {
           'title': p.title,
+          'image': p.image, // Added image
           'quantity': p.quantity > 0 ? p.quantity : 1,
           'price': p.price,
         }).toList(),

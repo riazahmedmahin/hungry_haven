@@ -88,12 +88,45 @@ class OrderScreen extends StatelessWidget {
                       const Divider(height: 24),
                       ...(order['items'] as List).map((item) {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.only(bottom: 12),
                           child: Row(
                             children: [
-                              Text("${item['quantity']}x ", style: const TextStyle(fontWeight: FontWeight.bold)),
-                              Expanded(child: Text(item['title'])),
-                              Text("\$${item['price'].toStringAsFixed(2)}"),
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    item['image'],
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => const Icon(Icons.fastfood, size: 20),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item['title'],
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "${item['quantity']}x | \$${item['price'].toStringAsFixed(2)}",
+                                      style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                "\$${(item['price'] * item['quantity']).toStringAsFixed(2)}",
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ],
                           ),
                         );

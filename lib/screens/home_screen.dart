@@ -36,98 +36,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      extendBody: true,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: Container(
-          height: 65,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            borderRadius: BorderRadius.circular(35),
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 26, 25, 25).withOpacity(0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+      extendBody: false,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(255, 212, 100, 39),
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        onTap: (index) {
+          if (index == 0) return;
+          Widget screen;
+          switch (index) {
+            case 1:
+              screen = const FavoriteScreen();
+              break;
+            case 2:
+              screen = const OrderScreen();
+              break;
+            case 3:
+              screen = const CartScreen();
+              break;
+            case 4:
+              screen = const ProfileScreen();
+              break;
+            default:
+              return;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => screen),
+          ).then((_) => setState(() {}));
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: "Favorites",
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 180, 136, 124),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.home_filled,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FavoriteScreen(),
-                    ),
-                  ).then((_) => setState(() {}));
-                },
-                child: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.grey,
-                  size: 24,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OrderScreen(),
-                    ),
-                  ).then((_) => setState(() {}));
-                },
-                child: const Icon(
-                  Icons.receipt_long_outlined,
-                  color: Colors.grey,
-                  size: 24,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CartScreen()),
-                  ).then((_) => setState(() {}));
-                },
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.grey,
-                  size: 24,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
-                child: const Icon(
-                  Icons.person_outline,
-                  color: Colors.grey,
-                  size: 24,
-                ),
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            label: "Orders",
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: "Cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: "Profile",
+          ),
+        ],
       ),
       body: SafeArea(
         bottom: false,
@@ -137,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TopBar(),
+              TopBar(onUpdate: () => setState(() {})),
               const SizedBox(height: 24),
               const HeaderText(),
               const SizedBox(height: 24),
@@ -177,7 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       const SizedBox(height: 0),
-                      PopularFoodGrid(products: displayedProducts),
+                      ProductGrid(
+                        products: displayedProducts,
+                        onUpdate: () => setState(() {}),
+                      ),
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -192,7 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class TopBar extends StatelessWidget {
-  const TopBar({super.key});
+  final VoidCallback? onUpdate;
+  const TopBar({super.key, this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -237,10 +203,15 @@ class TopBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CartScreen()),
-            ),
+            onTap: () =>
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CartScreen()),
+                ).then((_) {
+                  if (context.mounted && onUpdate != null) {
+                    onUpdate!();
+                  }
+                }),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -266,7 +237,10 @@ class TopBar extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Text(
-                      newDemoProducts.where((p) => p.quantity > 0 || p.inCart).length.toString(),
+                      newDemoProducts
+                          .where((p) => p.quantity > 0 || p.inCart)
+                          .length
+                          .toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -642,10 +616,11 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
-class PopularFoodGrid extends StatelessWidget {
+class ProductGrid extends StatelessWidget {
   final List<Product> products;
+  final VoidCallback? onUpdate;
 
-  const PopularFoodGrid({super.key, required this.products});
+  const ProductGrid({super.key, required this.products, this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -674,7 +649,7 @@ class PopularFoodGrid extends StatelessWidget {
           childAspectRatio: 0.60,
         ),
         itemBuilder: (context, index) {
-          return ProductCard(product: products[index]);
+          return ProductCard(product: products[index], onUpdate: onUpdate);
         },
       ),
     );
@@ -683,7 +658,8 @@ class PopularFoodGrid extends StatelessWidget {
 
 class ProductCard extends StatefulWidget {
   final Product product;
-  const ProductCard({super.key, required this.product});
+  final VoidCallback? onUpdate;
+  const ProductCard({super.key, required this.product, this.onUpdate});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -819,9 +795,12 @@ class _ProductCardState extends State<ProductCard> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          product.quantity = 1;
-                          product.inCart = true;
+                          widget.product.quantity = 1;
+                          widget.product.inCart = true;
                         });
+                        if (widget.onUpdate != null) {
+                          widget.onUpdate!();
+                        }
                       },
                       child: Container(
                         width: 32,
@@ -867,7 +846,12 @@ class _ProductCardState extends State<ProductCard> {
             right: 15,
             child: GestureDetector(
               onTap: () {
-                setState(() => product.isFavorite = !product.isFavorite);
+                setState(
+                  () => widget.product.isFavorite = !widget.product.isFavorite,
+                );
+                if (widget.onUpdate != null) {
+                  widget.onUpdate!();
+                }
               },
               child: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
