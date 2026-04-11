@@ -69,10 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white54,
                 size: 24,
               ),
-              const Icon(
-                Icons.assignment_outlined,
-                color: Colors.white54,
-                size: 24,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CartScreen()),
+                  );
+                },
+                child: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: Colors.white54,
+                  size: 24,
+                ),
               ),
               const Icon(Icons.person_outline, color: Colors.white54, size: 24),
             ],

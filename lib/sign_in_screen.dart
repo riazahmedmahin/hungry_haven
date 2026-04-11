@@ -158,7 +158,7 @@ class _SignInScreenState extends State<SignInScreen> {
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
         hintText: hint,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,

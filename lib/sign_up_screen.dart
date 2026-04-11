@@ -22,9 +22,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text('Register', style: TextStyle(color: Colors.black87)),
       ),
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -86,6 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
+        ),
       ),
     );
   }
@@ -98,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         fillColor: const Color(0xFFF1F5F6),
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
         hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
         suffixIcon: obscure
             ? IconButton(
