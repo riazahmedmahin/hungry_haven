@@ -12,6 +12,8 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  String selectedSize = "Medium";
+
   @override
   void initState() {
     super.initState();
@@ -35,18 +37,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: Container(
               height: MediaQuery.of(context).size.width * 2,
               decoration: const BoxDecoration(
-                color: Color(0xFFFF5D5D), // Match the coral red color from the mockup
+                color: Color(
+                  0xFFFF5D5D,
+                ), // Match the coral red color from the mockup
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          
+
           SafeArea(
             child: Column(
               children: [
                 // Custom Top App Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -58,7 +65,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             color: Colors.white.withOpacity(0.3),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
                       const Text(
@@ -69,13 +80,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 26),
+                      const Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.white,
+                        size: 26,
+                      ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 10),
-                
+
                 // Huge Center Product Image with underlying cream blob drop shadow
                 Stack(
                   alignment: Alignment.center,
@@ -108,215 +123,227 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             color: Colors.black.withOpacity(0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 15),
-                          )
-                        ]
+                          ),
+                        ],
                       ),
-                      child: Image.network(product.image, fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.fastfood, size: 100, color: Colors.white),
+                      child: Image.network(
+                        product.image,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.fastfood,
+                              size: 100,
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Dynamic Title from Product
                 Text(
-                  product.title.split(" ").first, // Match the concise layout (or use product.title)
+                  product.title
+                      .split(" ")
+                      .first, // Match the concise layout (or use product.title)
                   style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
                     color: Color(0xFF4A4A4A),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Price row
                 RichText(
                   text: TextSpan(
-                    text: 'Large | ',
+                    text: '$selectedSize | ',
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                     children: [
                       TextSpan(
-                        text: '\$${(product.price * (product.quantity > 0 ? product.quantity : 1)).toStringAsFixed(2)}', // dynamically multiplies from global Product state
-                        style: const TextStyle(color: Color(0xFF4A4A4A), fontSize: 24, fontWeight: FontWeight.w900),
+                        text:
+                            '\$${(product.price * (product.quantity > 0 ? product.quantity : 1)).toStringAsFixed(2)}', // dynamically multiplies from global Product state
+                        style: const TextStyle(
+                          color: Color(0xFF4A4A4A),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Extra Food Details
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildInfoChip(Icons.star, "4.8", Colors.amber),
                     const SizedBox(width: 16),
-                    _buildInfoChip(Icons.local_fire_department, "450 kcal", Colors.redAccent),
+                    _buildInfoChip(
+                      Icons.local_fire_department,
+                      "450 kcal",
+                      Colors.redAccent,
+                    ),
                     const SizedBox(width: 16),
-                    _buildInfoChip(Icons.access_time_filled, "20 min", Colors.blueAccent),
+                    _buildInfoChip(
+                      Icons.access_time_filled,
+                      "20 min",
+                      Colors.blueAccent,
+                    ),
                   ],
                 ),
-                
-                const SizedBox(height: 16),
-                
-                // Description (could also be dynamic, leaving static matched to mocked image for now)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    "Tomato, Mozzarella, Green basil, Olives,\nBell pepper",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14, height: 1.5),
-                  ),
-                ),
-                
+
                 const SizedBox(height: 20),
-                
-                // Quantity Selector & Add to cart button
+
+                // Size Selector
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Quantity
-                    Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5))
-                        ]
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.remove, size: 20),
-                            onPressed: () {
-                              if (product.quantity > 1) {
-                                setState(() => product.quantity--);
-                              }
-                            },
-                          ),
-                          Text('${product.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          IconButton(
-                            icon: const Icon(Icons.add, size: 20),
-                            onPressed: () => setState(() => product.quantity++),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Add to cart
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF5D5D),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        elevation: 5,
-                        shadowColor: const Color(0xFFFF5D5D).withOpacity(0.5),
-                      ),
-                      child: const Text(
-                        "Add to cart",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    _buildSizeOption("Regular"),
+                    const SizedBox(width: 15),
+                    _buildSizeOption("Medium"),
+                    const SizedBox(width: 15),
+                    _buildSizeOption("Large"),
                   ],
                 ),
-                
+
+                const SizedBox(height: 30),
+
+                // Quantity Selector (Moved above Add to cart)
+                Container(
+                  height: 50,
+                  width: 130,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove, size: 20),
+                        onPressed: () {
+                          if (product.quantity > 1) {
+                            setState(() => product.quantity--);
+                          }
+                        },
+                      ),
+                      Text(
+                        '${product.quantity}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add, size: 20),
+                        onPressed: () => setState(() => product.quantity++),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Add to cart button
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CartScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF5D5D),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 18,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 5,
+                    shadowColor: const Color(0xFFFF5D5D).withOpacity(0.5),
+                  ),
+                  child: const Text(
+                    "Add to cart",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
                 const Spacer(),
               ],
             ),
           ),
-          
-          // Bottom Wheel Decor & Carousel Overlay
-          Positioned(
-            bottom: -MediaQuery.of(context).size.width * 1.5,
-            left: -MediaQuery.of(context).size.width * 0.5,
-            right: -MediaQuery.of(context).size.width * 0.5,
-            child: SizedBox(
-               height: MediaQuery.of(context).size.width * 2,
-               child: Stack(
-                 alignment: Alignment.topCenter,
-                 children: [
-                   // The bottom thick red circular arc acting as wheel background
-                   Container(
-                     decoration: const BoxDecoration(
-                       color: Color(0xFFFF5D5D),
-                       shape: BoxShape.circle,
-                     ),
-                   ),
-                    
-                   // The dotted wheel boundary acting as carousel rail
-                   Positioned(
-                     top: 40, // push it down slightly
-                     child: Container(
-                       width: MediaQuery.of(context).size.width * 0.8,
-                       height: MediaQuery.of(context).size.width * 0.8,
-                       decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         border: Border.all(color: Colors.white.withOpacity(0.4), width: 3), 
-                       ),
-                     ),
-                   ),
-                   // Red selector needle/pointer
-                   const Positioned(
-                      top: 15,
-                      child: Icon(Icons.arrow_drop_up_rounded, color: Colors.white, size: 60),
-                   )
-                 ]
-               )
-            ),
-          ),
 
-          // Wheel Pizza Cards Floating Elements
+          // Ingredients Arc Scroll List
           Positioned(
-            bottom: 40,
+            bottom: 10,
             left: 0,
             right: 0,
-            child: SizedBox(
-              height: 130, // Contain the rotating cards properly
-              child: Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
-                children: [
-                  // Left Fanning Card
-                  Positioned(
-                    left: 20,
-                    bottom: -20,
-                    child: Transform.rotate(
-                      angle: -0.3,
-                      child: const SmallPizzaCard(title: "Chicken", image: "https://pngimg.com/d/pizza_PNG44077.png"),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 30, bottom: 0),
+                  child: Text(
+                    "Ingredients",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4A4A4A),
                     ),
                   ),
-                  // Center Focus Card
-                  Positioned(
-                    bottom: 25, 
-                    child: Transform.scale(
-                      scale: 1.15,
-                      child: SmallPizzaCard(
-                        title: product.title.split(" ").first, 
-                        image: product.image,
-                      ),
-                    ),
-                  ),
-                  // Right Fanning Card
-                  Positioned(
-                    right: 20,
-                    bottom: -20,
-                    child: Transform.rotate(
-                      angle: 0.3,
-                      child: const SmallPizzaCard(title: "Tomato", image: "https://pngimg.com/d/pizza_PNG44077.png"),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                IngredientArcScrollable(
+                  ingredients: [
+                    {
+                      "title": "Chicken",
+                      "image": "https://pngimg.com/d/pizza_PNG44077.png",
+                    },
+                    {
+                      "title": "Tomato",
+                      "image": "https://pngimg.com/d/pizza_PNG44077.png",
+                    },
+                    {
+                      "title": "Cheese",
+                      "image":
+                          "https://pngimg.com/d/burger_sandwich_PNG4135.png",
+                    },
+                    {
+                      "title": "Basil",
+                      "image": "https://pngimg.com/d/noodle_PNG38.png",
+                    },
+                    {
+                      "title": "Olive",
+                      "image": "https://pngimg.com/d/potato_chips_PNG45.png",
+                    },
+                    {
+                      "title": "Onion",
+                      "image":
+                          "https://pngimg.com/d/burger_sandwich_PNG4135.png",
+                    },
+                    {
+                      "title": "Pepper",
+                      "image": "https://pngimg.com/d/pizza_PNG44077.png",
+                    },
+                  ],
+                ),
+              ],
             ),
           ),
         ],
@@ -343,8 +370,152 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         children: [
           Icon(icon, color: color, size: 16),
           const SizedBox(width: 4),
-          Text(text, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black87)),
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: Colors.black87,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSizeOption(String size) {
+    bool isSelected = selectedSize == size;
+    return GestureDetector(
+      onTap: () => setState(() => selectedSize = size),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFFF5D5D) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            if (isSelected)
+              BoxShadow(
+                color: const Color(0xFFFF5D5D).withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              )
+            else
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+          ],
+        ),
+        child: Text(
+          size,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.grey.shade600,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class IngredientArcScrollable extends StatefulWidget {
+  final List<Map<String, String>> ingredients;
+  const IngredientArcScrollable({super.key, required this.ingredients});
+
+  @override
+  State<IngredientArcScrollable> createState() =>
+      _IngredientArcScrollableState();
+}
+
+class _IngredientArcScrollableState extends State<IngredientArcScrollable> {
+  late ScrollController _scrollController;
+  final double itemWidth = 100.0;
+  int selectedIndex = 2; // Default focus
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController(
+      initialScrollOffset: selectedIndex * itemWidth,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 180,
+      child: AnimatedBuilder(
+        animation: _scrollController,
+        builder: (context, child) {
+          double offset = 0;
+          if (_scrollController.hasClients) {
+            offset = _scrollController.offset;
+          } else {
+            offset = selectedIndex * itemWidth;
+          }
+
+          return ListView.builder(
+            controller: _scrollController,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  MediaQuery.of(context).size.width / 2 - (itemWidth / 2),
+            ),
+            itemCount: widget.ingredients.length,
+            itemBuilder: (context, index) {
+              double myCenter = index * itemWidth;
+              double distance = (offset - myCenter).abs();
+
+              // Arc effect logic: items sink as they move away from the center
+              // Using a smoother power function for a deeper arc
+              double shift = math.pow((distance / 100), 2) * 40;
+              if (shift > 100) shift = 100;
+
+              // Scale effect: center items are slightly larger
+              double scale = 1.0 - (distance / 400).clamp(0.0, 0.3);
+
+              // Opacity effect
+              double opacity = 1.0 - (distance / 300).clamp(0.0, 0.6);
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() => selectedIndex = index);
+                  _scrollController.animateTo(
+                    myCenter,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeOutBack,
+                  );
+                },
+                child: Transform.translate(
+                  offset: Offset(0, shift),
+                  child: Transform.scale(
+                    scale: scale,
+                    child: Opacity(
+                      opacity: opacity,
+                      child: SizedBox(
+                        width: itemWidth,
+                        child: SmallPizzaCard(
+                          title: widget.ingredients[index]["title"]!,
+                          image: widget.ingredients[index]["image"]!,
+                          isActive: selectedIndex == index,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -353,44 +524,64 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 class SmallPizzaCard extends StatelessWidget {
   final String title;
   final String image;
-  const SmallPizzaCard({super.key, required this.title, required this.image});
+  final bool isActive;
+  const SmallPizzaCard({
+    super.key,
+    required this.title,
+    required this.image,
+    this.isActive = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 120,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          )
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 2),
-              child: Image.network(image, fit: BoxFit.contain, errorBuilder: (c,e,s) => const Icon(Icons.fastfood, color: Colors.grey)),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: isActive ? const Color(0xFFFF5D5D) : Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: isActive
+                    ? const Color(0xFFFF5D5D).withOpacity(0.3)
+                    : Colors.black.withOpacity(0.05),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
+            border: Border.all(
+              color: isActive ? Colors.transparent : Colors.grey.shade100,
+              width: 1,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black87),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontWeight: isActive ? FontWeight.w900 : FontWeight.w600,
+              fontSize: 14,
+              color: isActive ? Colors.white : const Color(0xFF4A4A4A),
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (isActive)
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFF5D5D),
+              shape: BoxShape.circle,
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 }

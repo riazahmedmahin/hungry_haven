@@ -99,8 +99,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onTap: () {
                   if (currentPage < demoData.length - 1) {
                     _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut);
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   } else {
                     // Last page: navigate to SignIn screen
                     Navigator.of(context).pushReplacement(
@@ -353,32 +354,22 @@ class OnboardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget imageWidget;
     if (illustration != null && illustration!.startsWith('assets/')) {
-      imageWidget = Image.asset(
-        illustration!,
-        fit: BoxFit.contain,
-      );
+      imageWidget = Image.asset(illustration!, fit: BoxFit.contain);
     } else {
-      imageWidget = Image.network(
-        illustration ?? '',
-        fit: BoxFit.contain,
-      );
+      imageWidget = Image.network(illustration ?? '', fit: BoxFit.contain);
     }
 
     return Column(
       children: [
         Expanded(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Center(child: imageWidget),
-          ),
+          child: AspectRatio(aspectRatio: 1, child: Center(child: imageWidget)),
         ),
         const SizedBox(height: 16),
         Text(
           title ?? '',
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Padding(
