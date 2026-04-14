@@ -11,10 +11,10 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   bool _obscurePassword = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
       backgroundColor: Colors.white,

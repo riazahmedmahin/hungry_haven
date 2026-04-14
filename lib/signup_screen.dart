@@ -9,18 +9,13 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        title: const Text('Register', style: TextStyle(color: Colors.black87)),
-      ),
+
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -29,14 +24,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 20,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
                           'Create Account',
-                          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -48,9 +49,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              _buildField(hint: 'Name', icon: Icons.person_outline),
+                              _buildField(
+                                hint: 'Name',
+                                icon: Icons.person_outline,
+                              ),
                               const SizedBox(height: 12),
-                              _buildField(hint: 'Email', icon: Icons.email_outlined),
+                              _buildField(
+                                hint: 'Email',
+                                icon: Icons.email_outlined,
+                              ),
                               const SizedBox(height: 12),
                               _buildField(
                                 hint: 'Password',
@@ -71,7 +78,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: const Text('Register', style: TextStyle(color: Colors.white)),
+                                  child: const Text(
+                                    'Register',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -107,7 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],
@@ -119,11 +129,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
         ),
       ),
-
     );
   }
 
-  Widget _buildField({required String hint, required IconData icon, bool obscure = false}) {
+  Widget _buildField({
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+  }) {
     return TextFormField(
       obscureText: obscure ? _obscurePassword : false,
       decoration: InputDecoration(
@@ -131,12 +144,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
         fillColor: const Color(0xFFF1F5F6),
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
         hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
         suffixIcon: obscure
             ? IconButton(
-                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Colors.grey.shade600),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey.shade600,
+                ),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               )
             : null,
       ),
