@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'home_screen.dart'; // To access the Product model. Ideally Product should be in a separate models file.
+import '../models/product_model.dart';
 import 'cart_screen.dart';
 import 'checkout_screen.dart';
 
@@ -13,13 +13,16 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+
+  int localQuantity = 1;
   String selectedSize = "Medium";
 
   @override
   void initState() {
     super.initState();
-    if (widget.product.quantity == 0) {
-      widget.product.quantity = 1;
+    // If product is already in cart, use its current quantity
+    if (widget.product.quantity > 0) {
+      localQuantity = widget.product.quantity;
     }
   }
 
@@ -226,13 +229,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         IconButton(
                           icon: const Icon(Icons.remove, size: 20),
                           onPressed: () {
-                            if (product.quantity > 1) {
-                              setState(() => product.quantity--);
+                            if (localQuantity > 1) {
+                              setState(() => localQuantity--);
                             }
                           },
                         ),
                         Text(
-                          '${product.quantity}',
+                          '$localQuantity',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -240,7 +243,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.add, size: 20),
-                          onPressed: () => setState(() => product.quantity++),
+                          onPressed: () => setState(() => localQuantity++),
                         ),
                       ],
                     ),
@@ -351,10 +354,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   children: [
                     TextSpan(
-                      text:
-                          (product.price *
-                                  (product.quantity > 0 ? product.quantity : 1))
-                              .toStringAsFixed(2),
+                      text: (product.price * localQuantity).toStringAsFixed(2),
                       style: const TextStyle(
                         color: Color(0xFF2D2D2D),
                         fontSize: 24,
@@ -368,13 +368,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
+              // Update the actual product only when ordering
+              setState(() {
+                widget.product.quantity = localQuantity;
+                widget.product.inCart = true;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => CheckoutScreen(
-                    totalAmount:
-                        product.price *
-                        (product.quantity > 0 ? product.quantity : 1),
+                    totalAmount: product.price * localQuantity,
                   ),
                 ),
               );

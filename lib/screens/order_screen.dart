@@ -68,9 +68,19 @@ class OrderScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Order #${order['id']}",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Order #${order['id']}",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              if (order['dateTime'] != null)
+                                Text(
+                                  _formatDateTime(order['dateTime']),
+                                  style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                                ),
+                            ],
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -152,5 +162,16 @@ class OrderScreen extends StatelessWidget {
               },
             ),
     );
+  }
+  String _formatDateTime(DateTime dt) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    String hour = dt.hour > 12 ? (dt.hour - 12).toString() : dt.hour.toString();
+    if (hour == '0') hour = '12';
+    String minute = dt.minute.toString().padLeft(2, '0');
+    String period = dt.hour >= 12 ? 'PM' : 'AM';
+    return "${months[dt.month - 1]} ${dt.day}, ${dt.year} | $hour:$minute $period";
   }
 }

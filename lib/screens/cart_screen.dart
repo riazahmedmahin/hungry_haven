@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hungry_haven/models/product_model.dart';
+import 'package:hungry_haven/screens/home_screen.dart';
 import 'checkout_screen.dart';
-import 'home_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -11,10 +12,15 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   // Accessing the unified global list
-  List<Product> get cartItems => newDemoProducts.where((p) => p.quantity > 0 || p.inCart).toList();
+  List<Product> get cartItems =>
+      newDemoProducts.where((p) => p.quantity > 0 || p.inCart).toList();
 
   double get totalBill {
-    return cartItems.fold(0, (sum, item) => sum + (item.price * (item.quantity > 0 ? item.quantity : 1)));
+    return cartItems.fold(
+      0,
+      (sum, item) =>
+          sum + (item.price * (item.quantity > 0 ? item.quantity : 1)),
+    );
   }
 
   @override
@@ -27,7 +33,11 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         title: const Text(
           "Cart",
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 22),
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
       ),
       body: cartItems.isEmpty
@@ -35,9 +45,16 @@ class _CartScreenState extends State<CartScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey),
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 80,
+                    color: Colors.grey,
+                  ),
                   SizedBox(height: 20),
-                  Text("Your cart is empty", style: TextStyle(color: Colors.grey, fontSize: 18)),
+                  Text(
+                    "Your cart is empty",
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  ),
                 ],
               ),
             )
@@ -59,14 +76,24 @@ class _CartScreenState extends State<CartScreen> {
                     margin: const EdgeInsets.only(bottom: 20),
                     decoration: const BoxDecoration(
                       color: Color(0xFFC7C6EE),
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+                      borderRadius: BorderRadius.horizontal(
+                        right: Radius.circular(20),
+                      ),
                     ),
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 30),
-                    child: const Icon(Icons.delete_outline, color: Colors.black87, size: 30),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.black87,
+                      size: 30,
+                    ),
                   ),
                   child: Container(
-                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    margin: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 20,
+                    ),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -76,7 +103,7 @@ class _CartScreenState extends State<CartScreen> {
                           color: Colors.black.withOpacity(0.04),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
-                        )
+                        ),
                       ],
                     ),
                     child: Row(
@@ -90,11 +117,18 @@ class _CartScreenState extends State<CartScreen> {
                               height: 80,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.fastfood, color: Colors.grey, size: 50),
+                                  const Icon(
+                                    Icons.fastfood,
+                                    color: Colors.grey,
+                                    size: 50,
+                                  ),
                             ),
                             const SizedBox(height: 12),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF3F3F3),
                                 borderRadius: BorderRadius.circular(20),
@@ -113,17 +147,29 @@ class _CartScreenState extends State<CartScreen> {
                                         });
                                       }
                                     },
-                                    child: const Icon(Icons.remove, size: 16, color: Colors.black54),
+                                    child: const Icon(
+                                      Icons.remove,
+                                      size: 16,
+                                      color: Colors.black54,
+                                    ),
                                   ),
                                   const SizedBox(width: 14),
                                   Text(
                                     '${product.quantity == 0 ? 1 : product.quantity}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   const SizedBox(width: 14),
                                   GestureDetector(
-                                    onTap: () => setState(() => product.quantity++),
-                                    child: const Icon(Icons.add, size: 16, color: Colors.black54),
+                                    onTap: () =>
+                                        setState(() => product.quantity++),
+                                    child: const Icon(
+                                      Icons.add,
+                                      size: 16,
+                                      color: Colors.black54,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -137,12 +183,19 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Text(
                                 product.title,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                               const SizedBox(height: 6),
                               Text(
                                 product.subtitle,
-                                style: TextStyle(color: Colors.grey.shade500, fontSize: 12, height: 1.4),
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                  height: 1.4,
+                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -158,11 +211,19 @@ class _CartScreenState extends State<CartScreen> {
                               const SizedBox(height: 12),
                               const Row(
                                 children: [
-                                  Icon(Icons.check_box, size: 16, color: Colors.black87),
+                                  Icon(
+                                    Icons.check_box,
+                                    size: 16,
+                                    color: Colors.black87,
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     "Ready for Checkout",
-                                    style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -195,11 +256,18 @@ class _CartScreenState extends State<CartScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Total Bill", style: TextStyle(color: Colors.white70, fontSize: 14)),
+                const Text(
+                  "Total Bill",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
                 const SizedBox(height: 2),
                 Text(
                   "\$${totalBill.toStringAsFixed(2)}",
-                  style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ],
             ),
@@ -209,21 +277,30 @@ class _CartScreenState extends State<CartScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CheckoutScreen(totalAmount: totalBill),
+                    builder: (context) =>
+                        CheckoutScreen(totalAmount: totalBill),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
                 elevation: 0,
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Place Order", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(
+                    "Place Order",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                   SizedBox(width: 8),
                   Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black),
                 ],

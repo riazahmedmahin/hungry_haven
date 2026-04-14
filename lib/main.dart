@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'signin_screen.dart';
+import 'package:hungry_haven/screens/signin_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() {

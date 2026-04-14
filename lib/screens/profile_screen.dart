@@ -136,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
                 },
               ),
               _buildSettingItem(
-                title: "Payment Profile",
+                title: "Payment Methods",
                 subtitle: "Name, Mobile Number, Email",
                 icon: Icons.person_add_alt_1_outlined,
                 onTap: () {},
@@ -157,7 +157,7 @@ class ProfileScreen extends StatelessWidget {
                   ).pushNamedAndRemoveUntil('/signin', (route) => false);
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFEBEE), // Light red
                     borderRadius: BorderRadius.circular(16),
@@ -168,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: const Color(
                             0xFFFFCDD2,

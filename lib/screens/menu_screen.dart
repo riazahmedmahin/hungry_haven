@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // To access Product model and demo data
+import 'home_screen.dart';
+import '../models/product_model.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});

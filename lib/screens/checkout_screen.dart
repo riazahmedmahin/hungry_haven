@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'order_screen.dart';
 import 'home_screen.dart';
+import '../models/product_model.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final double totalAmount;
@@ -239,6 +240,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       orderHistory.insert(0, {
         'id': DateTime.now().millisecondsSinceEpoch.toString().substring(7),
         'total': widget.totalAmount + 6.00,
+        'dateTime': DateTime.now(), // Saving the timestamp
         'items': cartItems.map((p) => {
           'title': p.title,
           'image': p.image, // Added image

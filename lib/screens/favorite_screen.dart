@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:hungry_haven/screens/home_screen.dart';
+import '../models/product_model.dart';
 import 'product_details_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -24,7 +25,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         centerTitle: true,
         leading: Navigator.canPop(context)
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.black,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.pop(context),
               )
             : null,
@@ -92,7 +97,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductDetailsScreen(product: product),
+                          builder: (context) =>
+                              ProductDetailsScreen(product: product),
                         ),
                       ).then((_) {
                         setState(() {});
