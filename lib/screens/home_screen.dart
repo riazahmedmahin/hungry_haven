@@ -533,12 +533,12 @@ class OfferBanner extends StatelessWidget {
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () {
-                      if (newDemoProducts.isNotEmpty) {
+                      if (newDemoProducts.length > 2) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProductDetailsScreen(
-                              product: newDemoProducts[1], // Pizza Sicilia as featured
+                              product: newDemoProducts[2], // Classic Cheese Burger as featured in banner
                             ),
                           ),
                         );

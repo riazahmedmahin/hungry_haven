@@ -117,9 +117,10 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 25), // Increased spacing
           Expanded(
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 20),
               child: ProductGrid(
                 products: displayedProducts,
