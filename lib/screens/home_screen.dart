@@ -5,6 +5,7 @@ import 'cart_screen.dart';
 import 'profile_screen.dart';
 import 'favorite_screen.dart';
 import 'order_screen.dart';
+import 'menu_screen.dart';
 
 final List<Map<String, String>> categoryData = [
   {"title": "Fruits", "image": "https://pngimg.com/d/mango_PNG9173.png"},
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             searchHistory: _searchHistory,
             onUpdate: () => setState(() {}),
           ),
-          FavoriteScreen(onUpdate: () => setState(() {})),
+          const MenuScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -71,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: "Favorites",
+            icon: Icon(Icons.restaurant_menu),
+            label: "Menu",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'order_screen.dart';
+import 'favorite_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -118,6 +119,18 @@ class ProfileScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const OrderScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildSettingItem(
+                title: "My Favorites",
+                subtitle: "View your saved food items",
+                icon: Icons.favorite_outline,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const FavoriteScreen(),
                     ),
                   );
                 },

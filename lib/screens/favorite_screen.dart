@@ -22,6 +22,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         title: const Text(
           "My Favorites",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
