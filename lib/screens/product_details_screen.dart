@@ -13,7 +13,6 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-
   int localQuantity = 1;
   String selectedSize = "Medium";
 
@@ -30,30 +29,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     final product = widget.product;
     return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: _buildBottomBar(product),
+      backgroundColor: const Color(0xFFFBF9F7),
       body: Stack(
         children: [
-          // Huge Top Red Curve Drop
-          Positioned(
-            top: -MediaQuery.of(context).size.width,
-            left: -MediaQuery.of(context).size.width * 0.2,
-            right: -MediaQuery.of(context).size.width * 0.2,
+          // Simplified Clipper for better performance
+          ClipPath(
+            clipper: SimpleHeaderClipper(),
             child: Container(
-              height: MediaQuery.of(context).size.width * 2,
+              height: 350,
               decoration: const BoxDecoration(
-                color: Color(0xFFFF5D5D),
-                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [Color(0xFF8B1212), Color(0xFFD32F2F)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
           ),
 
           SafeArea(
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  // Custom Top App Bar
+                  // App Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
@@ -62,30 +60,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
+                        _buildRoundButton(
+                          icon: Icons.arrow_back_ios_new,
                           onTap: () => Navigator.pop(context),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_back_ios_new,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
                         ),
                         const Text(
-                          "Pizza Party",
+                          "Product Details",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        GestureDetector(
+                        _buildRoundButton(
+                          icon: Icons.shopping_cart_outlined,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -94,63 +82,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ).then((_) => setState(() {}));
                           },
-                          child: const Icon(
-                            Icons.shopping_cart_outlined,
-                            color: Colors.white,
-                            size: 26,
-                          ),
                         ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(
-                    height: 35,
-                  ), // Increased to clear the red top circle
-                  // Huge Center Product Image with underlying cream blob drop shadow
+                  const SizedBox(height: 10),
+
+                  // Image Section
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Cream Blob Design Element beneath pizza
-                      Positioned(
-                        bottom: 20,
-                        child: Container(
-                          width: 250,
-                          height: 150,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFFBE4D2),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(80),
-                              topRight: Radius.circular(150),
-                              bottomLeft: Radius.circular(150),
-                              bottomRight: Radius.circular(80),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Drop shadow container for image (assuming image is completely transparent PNG)
                       Container(
-                        width: 300, // Restored to original big size
-                        height: 300,
+                        width: 280,
+                        height: 280,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.12),
-                              blurRadius: 25,
-                              offset: const Offset(0, 15),
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 30,
+                              offset: const Offset(0, 10),
                             ),
                           ],
                         ),
-                        child: Image.network(
-                          product.image,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                                Icons.fastfood,
-                                size: 100,
-                                color: Colors.white,
-                              ),
+                      ),
+                      Image.network(
+                        product.image,
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.fastfood,
+                          size: 100,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -158,43 +123,51 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   const SizedBox(height: 10),
 
-                  // Dynamic Title from Product
                   Text(
                     product.title,
                     style: const TextStyle(
-                      fontSize: 30, // Slightly increased
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF4A4A4A),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF1F1F1F),
                     ),
                   ),
 
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 15),
 
-                  const SizedBox(height: 10),
-
-                  // Extra Food Details
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildInfoChip(Icons.star, "4.8", Colors.amber),
-                      const SizedBox(width: 16),
-                      _buildInfoChip(
-                        Icons.local_fire_department,
-                        "450 kcal",
-                        Colors.redAccent,
-                      ),
-                      const SizedBox(width: 16),
-                      _buildInfoChip(
-                        Icons.access_time_filled,
-                        "20 min",
-                        Colors.blueAccent,
-                      ),
-                    ],
+                  // Stats Row
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.02),
+                          blurRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStat(Icons.star, "4.8", Colors.amber),
+                        _buildStat(
+                          Icons.local_fire_department,
+                          "450 kcal",
+                          Colors.orange,
+                        ),
+                        _buildStat(
+                          Icons.access_time_filled,
+                          "20 min",
+                          Colors.blue,
+                        ),
+                      ],
+                    ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 25),
 
-                  // Size Selector
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -206,106 +179,148 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
 
                   // Quantity Selector
                   Container(
-                    height: 45,
-                    width: 130,
+                    width: 140,
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove, size: 20),
-                          onPressed: () {
-                            if (localQuantity > 1) {
-                              setState(() => localQuantity--);
-                            }
-                          },
-                        ),
+                        _buildQtyBtn(Icons.remove, () {
+                          if (localQuantity > 1)
+                            setState(() => localQuantity--);
+                        }),
                         Text(
                           '$localQuantity',
                           style: const TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.add, size: 20),
-                          onPressed: () => setState(() => localQuantity++),
+                        _buildQtyBtn(
+                          Icons.add,
+                          () => setState(() => localQuantity++),
                         ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
 
-                  //const SizedBox(height: 25),
-
-                  // Ingredients Arc Scroll List (Moved IDLE into the Column to prevent overlap)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 12, bottom: 0),
-                        child: Text(
-                          "Ingredients",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF4A4A4A),
-                          ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Ingredients",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      IngredientArcScrollable(
-                        ingredients: [
-                          {
-                            "title": "Chicken",
-                            "image": "https://pngimg.com/d/pizza_PNG44077.png",
-                          },
-                          {
-                            "title": "Tomato",
-                            "image": "https://pngimg.com/d/pizza_PNG44077.png",
-                          },
-                          {
-                            "title": "Cheese",
-                            "image":
-                                "https://pngimg.com/d/burger_sandwich_PNG4135.png",
-                          },
-                          {
-                            "title": "Basil",
-                            "image": "https://pngimg.com/d/noodle_PNG38.png",
-                          },
-                          {
-                            "title": "Olive",
-                            "image":
-                                "https://pngimg.com/d/potato_chips_PNG45.png",
-                          },
-                          {
-                            "title": "Onion",
-                            "image":
-                                "https://pngimg.com/d/burger_sandwich_PNG4135.png",
-                          },
-                          {
-                            "title": "Pepper",
-                            "image": "https://pngimg.com/d/pizza_PNG44077.png",
-                          },
-                        ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  const IngredientShowcase(),
+
+                  const SizedBox(height: 120),
+                ],
+              ),
+            ),
+          ),
+
+          // Bottom Bar
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 25,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(35),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Total Price",
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      Text(
+                        "\$${(product.price * localQuantity).toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.product.quantity = localQuantity;
+                        widget.product.inCart = true;
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckoutScreen(
+                            totalAmount: product.price * localQuantity,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8B1212), Color(0xFFE53935)],
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.shopping_bag_outlined,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "Order Now",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -315,128 +330,33 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildBottomBar(Product product) {
-    return Container(
-      height: 100,
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(35),
-          topRight: Radius.circular(35),
+  Widget _buildRoundButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          shape: BoxShape.circle,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Total Price",
-                style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
-              ),
-              RichText(
-                text: TextSpan(
-                  text: '\$',
-                  style: const TextStyle(
-                    color: Color(0xFFFF5D5D),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: (product.price * localQuantity).toStringAsFixed(2),
-                      style: const TextStyle(
-                        color: Color(0xFF2D2D2D),
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Update the actual product only when ordering
-              setState(() {
-                widget.product.quantity = localQuantity;
-                widget.product.inCart = true;
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CheckoutScreen(
-                    totalAmount: product.price * localQuantity,
-                  ),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFF5D5D),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              elevation: 8,
-              shadowColor: const Color(0xFFFF5D5D).withOpacity(0.4),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.shopping_bag_outlined, size: 20),
-                SizedBox(width: 8),
-                Text(
-                  "Order Now",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        ],
+        child: Icon(icon, color: Colors.white, size: 20),
       ),
     );
   }
 
-  Widget _buildInfoChip(IconData icon, String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 16),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
+  Widget _buildStat(IconData icon, String text, Color color) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 14),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        ),
+      ],
     );
   }
 
@@ -444,26 +364,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     bool isSelected = selectedSize == size;
     return GestureDetector(
       onTap: () => setState(() => selectedSize = size),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF5D5D) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            if (isSelected)
-              BoxShadow(
-                color: const Color(0xFFFF5D5D).withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              )
-            else
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-          ],
+          color: isSelected ? const Color(0xFFD32F2F) : Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(color: Colors.grey.shade200),
         ),
         child: Text(
           size,
@@ -475,28 +381,103 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
   }
+
+  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, size: 18),
+      ),
+    );
+  }
 }
 
-class IngredientArcScrollable extends StatefulWidget {
-  final List<Map<String, String>> ingredients;
-  const IngredientArcScrollable({super.key, required this.ingredients});
+class SimpleHeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height - 80);
+    var controlPoint = Offset(size.width / 2, size.height);
+    var endPoint = Offset(size.width, size.height - 80);
+    path.quadraticBezierTo(
+      controlPoint.dx,
+      controlPoint.dy,
+      endPoint.dx,
+      endPoint.dy,
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
 
   @override
-  State<IngredientArcScrollable> createState() =>
-      _IngredientArcScrollableState();
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class _IngredientArcScrollableState extends State<IngredientArcScrollable> {
+class IngredientShowcase extends StatefulWidget {
+  const IngredientShowcase({super.key});
+
+  @override
+  State<IngredientShowcase> createState() => _IngredientShowcaseState();
+}
+
+class _IngredientShowcaseState extends State<IngredientShowcase> {
+  final List<Map<String, dynamic>> ingredients = [
+    {
+      "title": "Onions",
+      "image": "https://pngimg.com/d/onion_PNG3821.png",
+      "color": Color(0xFFE0C097),
+      "glow": Color(0xFFD32F2F).withOpacity(0.3),
+      "gradient": [Color(0xFFE0C097), Color(0xFFB88E5E)]
+    },
+    {
+      "title": "Tomato",
+      "image": "https://pngimg.com/d/tomato_PNG12590.png",
+      "color": Color(0xFFFF5252),
+      "glow": Color(0xFFFF5252).withOpacity(0.4),
+      "gradient": [Color(0xFFFF8A80), Color(0xFFD32F2F)]
+    },
+    {
+      "title": "Cheese",
+      "image": "https://pngimg.com/d/cheese_PNG25298.png",
+      "color": Color(0xFFFFCA28),
+      "glow": Color(0xFFFFB300).withOpacity(0.4),
+      "gradient": [Color(0xFFFFEE58), Color(0xFFFFCA28)]
+    },
+    {
+      "title": "Basil",
+      "image": "https://pngimg.com/d/basil_PNG40.png",
+      "color": Color(0xFF66BB6A),
+      "glow": Color(0xFF66BB6A).withOpacity(0.4),
+      "gradient": [Color(0xFFA5D6A7), Color(0xFF388E3C)]
+    },
+    {
+      "title": "Pickles",
+      "image": "https://pngimg.com/d/cucumber_PNG12608.png",
+      "color": Color(0xFF9CCC65),
+      "glow": Color(0xFF9CCC65).withOpacity(0.4),
+      "gradient": [Color(0xFFC5E1A5), Color(0xFF689F38)]
+    },
+    {
+      "title": "Pepper",
+      "image": "https://pngimg.com/d/pepper_PNG4124.png",
+      "color": Color(0xFFEF5350),
+      "glow": Color(0xFFEF5350).withOpacity(0.4),
+      "gradient": [Color(0xFFFF8A80), Color(0xFFC62828)]
+    },
+  ];
+
   late ScrollController _scrollController;
-  final double itemWidth = 80.0;
-  int selectedIndex = 2; // Default focus
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController(
-      initialScrollOffset: selectedIndex * itemWidth,
-    );
+    _scrollController = ScrollController(initialScrollOffset: 2 * 90.0);
   }
 
   @override
@@ -508,64 +489,36 @@ class _IngredientArcScrollableState extends State<IngredientArcScrollable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 170,
       child: AnimatedBuilder(
         animation: _scrollController,
         builder: (context, child) {
-          double offset = 0;
-          if (_scrollController.hasClients) {
-            offset = _scrollController.offset;
-          } else {
-            offset = selectedIndex * itemWidth;
-          }
-
+          double offset = _scrollController.hasClients ? _scrollController.offset : 2 * 90.0;
           return ListView.builder(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal:
-                  MediaQuery.of(context).size.width / 2 - (itemWidth / 2),
-            ),
-            itemCount: widget.ingredients.length,
+            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 2 - 45),
+            itemCount: ingredients.length,
             itemBuilder: (context, index) {
-              double myCenter = index * itemWidth;
-              double distance = (offset - myCenter).abs();
-
-              // Arc effect logic: items sink as they move away from the center
-              // Using a smoother power function for a deeper arc
-              double shift = math.pow((distance / 100), 2) * 40;
-              if (shift > 100) shift = 100;
-
-              // Scale effect: center items are slightly larger
-              double scale = 1.0 - (distance / 400).clamp(0.0, 0.3);
-
-              // Opacity effect
-              double opacity = 1.0 - (distance / 300).clamp(0.0, 0.6);
+              double itemPosition = index * 90.0;
+              double distance = (offset - itemPosition).abs();
+              double scale = (1.0 - (distance / 250).clamp(0.0, 0.4));
+              double shift = math.pow((distance / 80), 2) * 20;
+              if (shift > 60) shift = 60;
+              bool isFocused = distance < 45;
 
               return GestureDetector(
                 onTap: () {
-                  setState(() => selectedIndex = index);
-                  _scrollController.animateTo(
-                    myCenter,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeOutBack,
-                  );
+                  _scrollController.animateTo(itemPosition, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
                 },
                 child: Transform.translate(
                   offset: Offset(0, shift),
                   child: Transform.scale(
                     scale: scale,
-                    child: Opacity(
-                      opacity: opacity,
-                      child: SizedBox(
-                        width: itemWidth,
-                        child: SmallPizzaCard(
-                          title: widget.ingredients[index]["title"]!,
-                          image: widget.ingredients[index]["image"]!,
-                          isActive: selectedIndex == index,
-                        ),
-                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: _buildMeltyItem(ingredients[index], isFocused),
                     ),
                   ),
                 ),
@@ -576,69 +529,122 @@ class _IngredientArcScrollableState extends State<IngredientArcScrollable> {
       ),
     );
   }
-}
 
-class SmallPizzaCard extends StatelessWidget {
-  final String title;
-  final String image;
-  final bool isActive;
-  const SmallPizzaCard({
-    super.key,
-    required this.title,
-    required this.image,
-    this.isActive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMeltyItem(Map<String, dynamic> data, bool isFocused) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 65,
-          height: 65,
+        Stack(
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: isActive ? const Color(0xFFFF5D5D) : Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: isActive
-                    ? const Color(0xFFFF5D5D).withOpacity(0.3)
-                    : Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+          clipBehavior: Clip.none, // Ensure drips are not clipped
+          children: [
+            // Organic Teardrop Effect (The 'Jul Jule' part)
+            if (isFocused) ...[
+              // Primary Organic Drop
+              Positioned(
+                bottom: -15,
+                child: CustomPaint(
+                  size: const Size(25, 40),
+                  painter: TeardropPainter(color: (data['gradient'] as List<Color>)[1]),
+                ),
+              ),
+              // Secondary Small Organic Drop
+              Positioned(
+                bottom: 5,
+                right: 15,
+                child: CustomPaint(
+                  size: const Size(12, 25),
+                  painter: TeardropPainter(
+                    color: (data['gradient'] as List<Color>)[1].withOpacity(0.7),
+                  ),
+                ),
               ),
             ],
-            border: Border.all(
-              color: isActive ? Colors.transparent : Colors.grey.shade100,
-              width: 1,
+            // Background Circle
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: isFocused ? 95 : 70,
+              height: isFocused ? 95 : 70,
+              decoration: BoxDecoration(
+                color: isFocused ? null : Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: isFocused ? data['glow'] : Colors.black.withOpacity(0.05),
+                    blurRadius: isFocused ? 25 : 10,
+                    spreadRadius: isFocused ? 2 : 0,
+                  ),
+                ],
+                gradient: isFocused ? RadialGradient(colors: data['gradient']) : null,
+              ),
             ),
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontWeight: isActive ? FontWeight.w900 : FontWeight.w600,
-              fontSize: 12,
-              color: isActive ? Colors.white : const Color(0xFF4A4A4A),
+            // Content
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(
+                  data['image'],
+                  width: isFocused ? 45 : 35,
+                  height: isFocused ? 45 : 35,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const Icon(Icons.restaurant, size: 20),
+                ),
+                if (isFocused)
+                  Text(
+                    data['title'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
+                      color: data['color'].computeLuminance() > 0.5 ? Colors.black87 : Colors.white,
+                    ),
+                  ),
+              ],
             ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+          ],
         ),
-        if (isActive)
-          Container(
-            margin: const EdgeInsets.only(top: 5),
-            width: 5,
-            height: 5,
-            decoration: const BoxDecoration(
-              color: Color(0xFFFF5D5D),
-              shape: BoxShape.circle,
-            ),
-          ),
+        if (!isFocused) ...[
+          const SizedBox(height: 8),
+          Text(data['title'], style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        ],
       ],
     );
   }
+}
+
+class TeardropPainter extends CustomPainter {
+  final Color color;
+  TeardropPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..shader = LinearGradient(
+        colors: [color, color.withOpacity(0)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+
+    var path = Path();
+    // Start at top center
+    path.moveTo(size.width / 2, 0);
+    // Left side curve to bottom center
+    path.cubicTo(
+      0, size.height * 0.4,
+      0, size.height,
+      size.width / 2, size.height,
+    );
+    // Right side curve back to top center
+    path.cubicTo(
+      size.width, size.height,
+      size.width, size.height * 0.4,
+      size.width / 2, 0,
+    );
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
