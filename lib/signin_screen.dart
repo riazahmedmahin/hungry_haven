@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'forget_password.dart';
-import 'sign_up_screen.dart';
+import 'signup_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -23,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: ConstrainedBox(
+              child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Center(
                   child: Column(
@@ -31,8 +31,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       const Text(
                         'Hello Again !',
-                        style:
-                            TextStyle(fontSize: 38, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -63,14 +65,16 @@ class _SignInScreenState extends State<SignInScreen> {
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (_) => const ForgetPassword()),
+                                      builder: (_) => const ForgetPassword(),
+                                    ),
                                   );
                                 },
                                 child: Text(
                                   'Forget Password',
                                   style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 13),
+                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ),
@@ -81,7 +85,9 @@ class _SignInScreenState extends State<SignInScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   // validate and then navigate to Home
-                                  Navigator.of(context).pushReplacementNamed('/home');
+                                  Navigator.of(
+                                    context,
+                                  ).pushReplacementNamed('/home');
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF1976D2),
@@ -89,20 +95,27 @@ class _SignInScreenState extends State<SignInScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text('Login',style: TextStyle(color: Colors.white),),
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20),
                             Row(
                               children: [
                                 Expanded(
-                                    child: Divider(color: Colors.grey.shade300)),
+                                  child: Divider(color: Colors.grey.shade300),
+                                ),
                                 const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
                                   child: Text('or'),
                                 ),
                                 Expanded(
-                                    child: Divider(color: Colors.grey.shade300)),
+                                  child: Divider(color: Colors.grey.shade300),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 18),
@@ -110,10 +123,12 @@ class _SignInScreenState extends State<SignInScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _socialBox(
-                                    'https://cdn-icons-png.flaticon.com/128/281/281764.png'),
+                                  'https://cdn-icons-png.flaticon.com/128/281/281764.png',
+                                ),
                                 const SizedBox(width: 12),
                                 _socialBox(
-                                    'https://cdn-icons-png.flaticon.com/128/0/747.png'),
+                                  'https://cdn-icons-png.flaticon.com/128/0/747.png',
+                                ),
                               ],
                             ),
                           ],
@@ -123,17 +138,25 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Don’t have an account? ',
-                              style: TextStyle(color: Colors.grey.shade600)),
+                          Text(
+                            'Don’t have an account? ',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const SignUpScreen()));
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const SignUpScreen(),
+                                ),
+                              );
                             },
-                            child: const Text('Register',
-                                style: TextStyle(
-                                    color: Color(0xFF1976D2),
-                                    fontWeight: FontWeight.w600)),
+                            child: const Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Color(0xFF1976D2),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -148,8 +171,11 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _buildField(
-      {required String hint, required IconData icon, bool obscure = false}) {
+  Widget _buildField({
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+  }) {
     return TextFormField(
       obscureText: obscure ? _obscurePassword : false,
       decoration: InputDecoration(
@@ -157,8 +183,10 @@ class _SignInScreenState extends State<SignInScreen> {
         fillColor: const Color(0xFFF1F5F6),
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
         hintText: hint,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,

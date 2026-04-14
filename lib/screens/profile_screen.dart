@@ -9,19 +9,15 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: const Text(
           "Profile",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.black87,
             fontWeight: FontWeight.bold,
-            fontSize: 24,
+            fontSize: 22,
           ),
         ),
       ),
@@ -29,7 +25,6 @@ class ProfileScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
@@ -78,27 +73,27 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Business Settings Group (Using user's options but with new style)
-              _buildSettingItem(
-                title: "Business Settings",
-                subtitle: "Settings specific to this business",
-                icon: Icons.business,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                title: "Switch Business",
-                subtitle: "Change to another business",
-                icon: Icons.swap_horiz,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                title: "Create New Business",
-                subtitle: "Add another business to your account",
-                icon: Icons.store_mall_directory_outlined,
-                onTap: () {},
-              ),
+              // // Business Settings Group (Using user's options but with new style)
+              // _buildSettingItem(
+              //   title: "Business Settings",
+              //   subtitle: "Settings specific to this business",
+              //   icon: Icons.business,
+              //   onTap: () {},
+              // ),
+              // _buildSettingItem(
+              //   title: "Switch Business",
+              //   subtitle: "Change to another business",
+              //   icon: Icons.swap_horiz,
+              //   onTap: () {},
+              // ),
+              // _buildSettingItem(
+              //   title: "Create New Business",
+              //   subtitle: "Add another business to your account",
+              //   icon: Icons.store_mall_directory_outlined,
+              //   onTap: () {},
+              // ),
 
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
               const Text(
                 "General Settings",
                 style: TextStyle(

@@ -22,22 +22,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedCategoryIndex = 2; // Default to 'All'
+  int _currentIndex = 0;
+  final List<String> _searchHistory = [];
 
   @override
   Widget build(BuildContext context) {
-    String currentCategoryStr = categoryData[selectedCategoryIndex]["title"]!;
-
-    // Filter products dynamically based on category
-    List<Product> displayedProducts = newDemoProducts.where((p) {
-      if (currentCategoryStr == "All") return true;
-      return p.category == currentCategoryStr;
-    }).toList();
-
     return Scaffold(
       backgroundColor: Colors.white,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          HomeScreenContent(
+            searchHistory: _searchHistory,
+            onUpdate: () => setState(() {}),
+          ),
+          FavoriteScreen(onUpdate: () => setState(() {})),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: const Color.fromARGB(255, 212, 100, 39),
@@ -47,25 +50,23 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedFontSize: 12,
         unselectedFontSize: 12,
         onTap: (index) {
-          if (index == 0) return;
-          Widget screen;
-          switch (index) {
-            case 1:
-              screen = const FavoriteScreen();
-              break;
-            case 2:
-              screen = const CartScreen();
-              break;
-            case 3:
-              screen = const ProfileScreen();
-              break;
-            default:
-              return;
+          if (index == 2) {
+            // Cart
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartScreen()),
+            ).then((_) => setState(() {}));
+          } else if (index == 3) {
+            // Profile
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            ).then((_) => setState(() {}));
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
           }
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => screen),
-          ).then((_) => setState(() {}));
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
@@ -83,65 +84,125 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(bottom: 110),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TopBar(onUpdate: () => setState(() {})),
-              const SizedBox(height: 24),
-              const HeaderText(),
-              const SizedBox(height: 24),
-              const SearchAndFilter(),
-              const SizedBox(height: 24),
-              const OfferBanner(),
-              const SizedBox(height: 30),
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Catagory"),
-                  ),
-                  // Circular huge curved background simulating the ellipse backdrop
-                  Positioned(
-                    top: 40,
-                    left: -150,
-                    right: -150,
-                    bottom: 0,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF9F9F9),
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.elliptical(800, 250),
-                        ),
+    );
+  }
+}
+
+class HomeScreenContent extends StatefulWidget {
+  final List<String> searchHistory;
+  final VoidCallback onUpdate;
+  const HomeScreenContent({
+    super.key,
+    required this.searchHistory,
+    required this.onUpdate,
+  });
+
+  @override
+  State<HomeScreenContent> createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<HomeScreenContent> {
+  int selectedCategoryIndex = 2; // Default to 'All'
+  String searchQuery = "";
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchSubmit(String value) {
+    if (value.trim().isNotEmpty) {
+      if (!widget.searchHistory.contains(value.trim())) {
+        setState(() {
+          widget.searchHistory.insert(0, value.trim());
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String currentCategoryStr = categoryData[selectedCategoryIndex]["title"]!;
+
+    // Filter products dynamically based on category and search query
+    List<Product> displayedProducts = newDemoProducts.where((p) {
+      bool categoryMatch =
+          currentCategoryStr == "All" || p.category == currentCategoryStr;
+      bool searchMatch =
+          p.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          p.subtitle.toLowerCase().contains(searchQuery.toLowerCase());
+      return categoryMatch && searchMatch;
+    }).toList();
+
+    return SafeArea(
+      bottom: false,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: 110),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TopBar(onUpdate: widget.onUpdate),
+            const SizedBox(height: 24),
+            const HeaderText(),
+            const SizedBox(height: 24),
+            SearchAndFilter(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+              onSubmitted: _onSearchSubmit,
+              searchHistory: widget.searchHistory,
+            ),
+            const SizedBox(height: 24),
+            const OfferBanner(),
+            const SizedBox(height: 30),
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Catagory"),
+                ),
+                // Circular huge curved background simulating the ellipse backdrop
+                Positioned(
+                  top: 40,
+                  left: -150,
+                  right: -150,
+                  bottom: 0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF9F9F9),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.elliptical(800, 250),
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      CategoryArcScrollable(
-                        selectedIndex: selectedCategoryIndex,
-                        onCategoryChanged: (index) {
-                          setState(() {
-                            selectedCategoryIndex = index;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 0),
-                      ProductGrid(
-                        products: displayedProducts,
-                        onUpdate: () => setState(() {}),
-                      ),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Column(
+                  children: [
+                    CategoryArcScrollable(
+                      selectedIndex: selectedCategoryIndex,
+                      onCategoryChanged: (index) {
+                        setState(() {
+                          selectedCategoryIndex = index;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 0),
+                    ProductGrid(
+                      products: displayedProducts,
+                      onUpdate: widget.onUpdate,
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -283,7 +344,18 @@ class HeaderText extends StatelessWidget {
 }
 
 class SearchAndFilter extends StatelessWidget {
-  const SearchAndFilter({super.key});
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
+  final List<String> searchHistory;
+
+  const SearchAndFilter({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmitted,
+    required this.searchHistory,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -307,6 +379,9 @@ class SearchAndFilter extends StatelessWidget {
                 border: Border.all(color: Colors.grey.shade100),
               ),
               child: TextField(
+                controller: controller,
+                onChanged: onChanged,
+                onSubmitted: onSubmitted,
                 decoration: InputDecoration(
                   hintText: "Search for fast food...",
                   hintStyle: TextStyle(
@@ -317,6 +392,15 @@ class SearchAndFilter extends StatelessWidget {
                     padding: EdgeInsets.only(left: 20, right: 12),
                     child: Icon(Icons.search, color: Colors.black45, size: 24),
                   ),
+                  suffixIcon: controller.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.grey),
+                          onPressed: () {
+                            controller.clear();
+                            onChanged("");
+                          },
+                        )
+                      : null,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 18),
                 ),
@@ -324,14 +408,50 @@ class SearchAndFilter extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
-            height: 56,
-            width: 56,
-            decoration: const BoxDecoration(
-              color: Color(0xFF1F1F1F),
-              shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () {
+              if (searchHistory.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("No search history yet.")),
+                );
+                return;
+              }
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Search History"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: searchHistory
+                        .map((history) => ListTile(
+                              leading: const Icon(Icons.history),
+                              title: Text(history),
+                              onTap: () {
+                                controller.text = history;
+                                onChanged(history);
+                                Navigator.pop(context);
+                              },
+                            ))
+                        .toList(),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Close"),
+                    )
+                  ],
+                ),
+              );
+            },
+            child: Container(
+              height: 56,
+              width: 56,
+              decoration: const BoxDecoration(
+                color: Color(0xFF1F1F1F),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.history, color: Colors.white),
             ),
-            child: const Icon(Icons.tune, color: Colors.white),
           ),
         ],
       ),
@@ -411,7 +531,18 @@ class OfferBanner extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (newDemoProducts.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailsScreen(
+                              product: newDemoProducts[1], // Pizza Sicilia as featured
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: const Color(0xFFFF6A42),

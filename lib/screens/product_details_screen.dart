@@ -157,7 +157,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   // Dynamic Title from Product
                   Text(
-                    product.title.split(" ").first,
+                    product.title,
                     style: const TextStyle(
                       fontSize: 30, // Slightly increased
                       fontWeight: FontWeight.w800,

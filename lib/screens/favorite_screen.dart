@@ -3,7 +3,8 @@ import 'home_screen.dart';
 import 'product_details_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({super.key});
+  final VoidCallback? onUpdate;
+  const FavoriteScreen({super.key, this.onUpdate});
 
   @override
   State<FavoriteScreen> createState() => _FavoriteScreenState();
@@ -21,10 +22,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: const Text(
           "My Favorites",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -70,6 +67,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     setState(() {
                       product.isFavorite = false;
                     });
+                    if (widget.onUpdate != null) {
+                      widget.onUpdate!();
+                    }
                   },
                   background: Container(
                     margin: const EdgeInsets.only(bottom: 15),
@@ -88,7 +88,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         MaterialPageRoute(
                           builder: (context) => ProductDetailsScreen(product: product),
                         ),
-                      ).then((_) => setState(() {}));
+                      ).then((_) {
+                        setState(() {});
+                        if (widget.onUpdate != null) {
+                          widget.onUpdate!();
+                        }
+                      });
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 15),

@@ -25,10 +25,6 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
-        ),
         title: const Text(
           "Cart",
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 22),
