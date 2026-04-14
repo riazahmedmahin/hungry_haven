@@ -39,7 +39,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               height: 350,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF8B1212), Color(0xFFD32F2F)],
+                  colors: [
+                    Color.fromARGB(255, 214, 106, 106),
+                    Color(0xFFD32F2F),
+                  ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -65,7 +68,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           onTap: () => Navigator.pop(context),
                         ),
                         const Text(
-                          "Product Details",
+                          "Details",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -87,7 +90,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  //const SizedBox(height: 10),
 
                   // Image Section
                   Stack(
@@ -121,8 +124,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
 
-                  const SizedBox(height: 10),
-
+                  //const SizedBox(height: 10),
                   Text(
                     product.title,
                     style: const TextStyle(
@@ -132,7 +134,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 5),
 
                   // Stats Row
                   Container(
@@ -166,7 +168,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 15),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +181,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 15),
 
                   // Quantity Selector
                   Container(
@@ -211,7 +213,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
 
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -228,7 +230,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
 
                   const SizedBox(height: 15),
-
                   const IngredientShowcase(),
 
                   const SizedBox(height: 120),
@@ -433,42 +434,42 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
       "image": "https://pngimg.com/d/onion_PNG3821.png",
       "color": Color(0xFFE0C097),
       "glow": Color(0xFFD32F2F).withOpacity(0.3),
-      "gradient": [Color(0xFFE0C097), Color(0xFFB88E5E)]
+      "gradient": [Color(0xFFE0C097), Color(0xFFB88E5E)],
     },
     {
       "title": "Tomato",
       "image": "https://pngimg.com/d/tomato_PNG12590.png",
       "color": Color(0xFFFF5252),
       "glow": Color(0xFFFF5252).withOpacity(0.4),
-      "gradient": [Color(0xFFFF8A80), Color(0xFFD32F2F)]
+      "gradient": [Color(0xFFFF8A80), Color(0xFFD32F2F)],
     },
     {
       "title": "Cheese",
       "image": "https://pngimg.com/d/cheese_PNG25298.png",
       "color": Color(0xFFFFCA28),
       "glow": Color(0xFFFFB300).withOpacity(0.4),
-      "gradient": [Color(0xFFFFEE58), Color(0xFFFFCA28)]
+      "gradient": [Color(0xFFFFEE58), Color(0xFFFFCA28)],
     },
     {
       "title": "Basil",
       "image": "https://pngimg.com/d/basil_PNG40.png",
       "color": Color(0xFF66BB6A),
       "glow": Color(0xFF66BB6A).withOpacity(0.4),
-      "gradient": [Color(0xFFA5D6A7), Color(0xFF388E3C)]
+      "gradient": [Color(0xFFA5D6A7), Color(0xFF388E3C)],
     },
     {
       "title": "Pickles",
       "image": "https://pngimg.com/d/cucumber_PNG12608.png",
       "color": Color(0xFF9CCC65),
       "glow": Color(0xFF9CCC65).withOpacity(0.4),
-      "gradient": [Color(0xFFC5E1A5), Color(0xFF689F38)]
+      "gradient": [Color(0xFFC5E1A5), Color(0xFF689F38)],
     },
     {
       "title": "Pepper",
       "image": "https://pngimg.com/d/pepper_PNG4124.png",
       "color": Color(0xFFEF5350),
       "glow": Color(0xFFEF5350).withOpacity(0.4),
-      "gradient": [Color(0xFFFF8A80), Color(0xFFC62828)]
+      "gradient": [Color(0xFFFF8A80), Color(0xFFC62828)],
     },
   ];
 
@@ -493,12 +494,16 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
       child: AnimatedBuilder(
         animation: _scrollController,
         builder: (context, child) {
-          double offset = _scrollController.hasClients ? _scrollController.offset : 2 * 90.0;
+          double offset = _scrollController.hasClients
+              ? _scrollController.offset
+              : 2 * 90.0;
           return ListView.builder(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 2 - 45),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 2 - 45,
+            ),
             itemCount: ingredients.length,
             itemBuilder: (context, index) {
               double itemPosition = index * 90.0;
@@ -510,7 +515,11 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
 
               return GestureDetector(
                 onTap: () {
-                  _scrollController.animateTo(itemPosition, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
+                  _scrollController.animateTo(
+                    itemPosition,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeOutBack,
+                  );
                 },
                 child: Transform.translate(
                   offset: Offset(0, shift),
@@ -545,7 +554,9 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                 bottom: -15,
                 child: CustomPaint(
                   size: const Size(25, 40),
-                  painter: TeardropPainter(color: (data['gradient'] as List<Color>)[1]),
+                  painter: TeardropPainter(
+                    color: (data['gradient'] as List<Color>)[1],
+                  ),
                 ),
               ),
               // Secondary Small Organic Drop
@@ -555,7 +566,9 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                 child: CustomPaint(
                   size: const Size(12, 25),
                   painter: TeardropPainter(
-                    color: (data['gradient'] as List<Color>)[1].withOpacity(0.7),
+                    color: (data['gradient'] as List<Color>)[1].withOpacity(
+                      0.7,
+                    ),
                   ),
                 ),
               ),
@@ -570,12 +583,16 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: isFocused ? data['glow'] : Colors.black.withOpacity(0.05),
+                    color: isFocused
+                        ? data['glow']
+                        : Colors.black.withOpacity(0.05),
                     blurRadius: isFocused ? 25 : 10,
                     spreadRadius: isFocused ? 2 : 0,
                   ),
                 ],
-                gradient: isFocused ? RadialGradient(colors: data['gradient']) : null,
+                gradient: isFocused
+                    ? RadialGradient(colors: data['gradient'])
+                    : null,
               ),
             ),
             // Content
@@ -587,7 +604,8 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                   width: isFocused ? 45 : 35,
                   height: isFocused ? 45 : 35,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.restaurant, size: 20),
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.restaurant, size: 20),
                 ),
                 if (isFocused)
                   Text(
@@ -595,7 +613,9 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 12,
-                      color: data['color'].computeLuminance() > 0.5 ? Colors.black87 : Colors.white,
+                      color: data['color'].computeLuminance() > 0.5
+                          ? Colors.black87
+                          : Colors.white,
                     ),
                   ),
               ],
@@ -604,7 +624,10 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
         ),
         if (!isFocused) ...[
           const SizedBox(height: 8),
-          Text(data['title'], style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(
+            data['title'],
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
         ],
       ],
     );
@@ -630,15 +653,21 @@ class TeardropPainter extends CustomPainter {
     path.moveTo(size.width / 2, 0);
     // Left side curve to bottom center
     path.cubicTo(
-      0, size.height * 0.4,
-      0, size.height,
-      size.width / 2, size.height,
+      0,
+      size.height * 0.4,
+      0,
+      size.height,
+      size.width / 2,
+      size.height,
     );
     // Right side curve back to top center
     path.cubicTo(
-      size.width, size.height,
-      size.width, size.height * 0.4,
-      size.width / 2, 0,
+      size.width,
+      size.height,
+      size.width,
+      size.height * 0.4,
+      size.width / 2,
+      0,
     );
     path.close();
 
