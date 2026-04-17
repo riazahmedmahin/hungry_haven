@@ -90,8 +90,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  //const SizedBox(height: 10),
-
                   // Image Section
                   Stack(
                     alignment: Alignment.center,
