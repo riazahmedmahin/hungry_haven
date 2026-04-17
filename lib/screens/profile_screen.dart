@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'order_screen.dart';
 import 'favorite_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -68,7 +69,16 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Icon(Icons.edit_note, color: Colors.grey.shade400),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen(),
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.edit_note, color: Colors.grey.shade400),
+                    ),
                   ],
                 ),
               ),
