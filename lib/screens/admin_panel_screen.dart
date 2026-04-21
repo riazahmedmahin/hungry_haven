@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../models/product_model.dart';
 import 'signin_screen.dart';
 import 'order_screen.dart';
@@ -194,12 +195,23 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     double todaySales = 0;
     int todayOrders = 0;
     DateTime now = DateTime.now();
+    Map<String, int> categorySales = {};
     for (var order in orderHistory) {
       if (order['dateTime'] != null) {
         DateTime dt = order['dateTime'];
         if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
           todaySales += order['total'] ?? 0.0;
           todayOrders++;
+          for (var item in order['items']) {
+            int q = item['quantity'] ?? 1;
+            String t = item['title'];
+            String cat = "Other";
+            try {
+              Product curr = newDemoProducts.firstWhere((p) => p.title == t);
+              cat = curr.category;
+            } catch (e) {}
+            categorySales[cat] = (categorySales[cat] ?? 0) + q;
+          }
         }
       }
     }
@@ -295,6 +307,75 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           ),
           const SizedBox(height: 16),
           _build7DayGraph(),
+          const SizedBox(height: 30),
+          
+          // ---- PIE CHART SECTION ----
+          if (categorySales.isNotEmpty) ...[
+            const Text(
+              "Today's Top Dispatch Categories",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: CustomPaint(
+                      painter: PieChartPainter(
+                        categorySales,
+                        [Colors.blueAccent, Colors.orange, Colors.purpleAccent, Colors.green, Colors.redAccent, Colors.amber],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: categorySales.entries.toList().asMap().entries.map((entry) {
+                        int index = entry.key;
+                        var cat = entry.value;
+                        List<Color> colors = [Colors.blueAccent, Colors.orange, Colors.purpleAccent, Colors.green, Colors.redAccent, Colors.amber];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            children: [
+                              Container(width: 12, height: 12, decoration: BoxDecoration(color: colors[index % colors.length], shape: BoxShape.circle)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(cat.key, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                              ),
+                              Text("(${cat.value})", style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          // ---- END PIE CHART SECTION ----
+
           const SizedBox(height: 40),
         ],
       ),
@@ -436,6 +517,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     double filteredSales = 0;
     int itemsSold = 0;
     Map<String, int> productSales = {};
+    Map<String, int> categorySales = {};
 
     DateTime safeEnd = _endDate != null
         ? _endDate!.add(const Duration(hours: 23, minutes: 59))
@@ -452,9 +534,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           filteredSales += order['total'] ?? 0.0;
           for (var item in order['items']) {
             int q = item['quantity'] ?? 1;
+            String t = item['title'];
             itemsSold += q;
-            productSales[item['title']] =
-                (productSales[item['title']] ?? 0) + q;
+            productSales[t] = (productSales[t] ?? 0) + q;
+            
+            // Find Category
+            String cat = "Other";
+            try {
+              Product curr = newDemoProducts.firstWhere((p) => p.title == t);
+              cat = curr.category;
+            } catch (e) {}
+            categorySales[cat] = (categorySales[cat] ?? 0) + q;
           }
         }
       }
@@ -632,6 +722,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -1287,4 +1379,64 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       },
     );
   }
+}
+
+class PieChartPainter extends CustomPainter {
+  final Map<String, int> data;
+  final List<Color> colors;
+
+  PieChartPainter(this.data, this.colors);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (data.isEmpty) return;
+
+    double total = data.values.fold(0, (sum, val) => sum + val).toDouble();
+    if (total == 0) return;
+
+    double startAngle = -math.pi / 2;
+    Rect boundingSquare = Rect.fromCircle(
+      center: Offset(size.width / 2, size.height / 2),
+      radius: size.width / 2,
+    );
+
+    int index = 0;
+    data.forEach((key, value) {
+      double sweepAngle = (value / total) * 2 * math.pi;
+      Paint paint = Paint()
+        ..color = colors[index % colors.length]
+        ..style = PaintingStyle.fill;
+
+      canvas.drawArc(boundingSquare, startAngle, sweepAngle, true, paint);
+      
+      // Calculate percentage text placement
+      if (sweepAngle > 0.3) { // Only draw text for slices big enough
+        double percentage = (value / total) * 100;
+        double textAngle = startAngle + sweepAngle / 2;
+        double textRadius = size.width / 3.5;
+        double x = size.width / 2 + textRadius * math.cos(textAngle);
+        double y = size.height / 2 + textRadius * math.sin(textAngle);
+
+        TextPainter textPainter = TextPainter(
+          text: TextSpan(
+            text: "${percentage.toStringAsFixed(0)}%",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        );
+        textPainter.layout();
+        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
+      }
+
+      startAngle += sweepAngle;
+      index++;
+    });
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
