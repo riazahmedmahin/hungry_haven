@@ -11,6 +11,7 @@ class Product {
   final String category;
   int quantity;
   bool isFavorite;
+  int stock;
 
   Product({
     required this.id,
@@ -23,8 +24,12 @@ class Product {
     required this.category,
     this.quantity = 0,
     this.isFavorite = false,
+    this.stock = 10,
   });
 }
+
+double totalAdminSales = 0.0;
+List<String> adminNotifications = [];
 
 // Highly reliable Vecteezy fully-transparent preview URLs matching mockup perfectly
 List<Product> newDemoProducts = [

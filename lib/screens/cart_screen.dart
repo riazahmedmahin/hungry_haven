@@ -163,8 +163,14 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   const SizedBox(width: 14),
                                   GestureDetector(
-                                    onTap: () =>
-                                        setState(() => product.quantity++),
+                                    onTap: () {
+                                      if (product.quantity < product.stock) {
+                                        setState(() => product.quantity++);
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Only ${product.stock} items left in stock.")));
+                                        adminNotifications.insert(0, "User attempted to order more ${product.title} than the available stock (${product.stock}).");
+                                      }
+                                    },
                                     child: const Icon(
                                       Icons.add,
                                       size: 16,

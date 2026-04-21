@@ -241,6 +241,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         'id': DateTime.now().millisecondsSinceEpoch.toString().substring(7),
         'total': widget.totalAmount + 6.00,
         'dateTime': DateTime.now(), // Saving the timestamp
+        'paymentMethod': selectedPayment,
+        'user': 'Normal User',
         'items': cartItems.map((p) => {
           'title': p.title,
           'image': p.image, // Added image
@@ -248,8 +250,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           'price': p.price,
         }).toList(),
       });
-      // Clear cart
+      // Clear cart and update stock & sales
       for (var p in newDemoProducts) {
+        if (p.quantity > 0 || p.inCart) {
+          int qty = p.quantity > 0 ? p.quantity : 1;
+          p.stock = (p.stock - qty) > 0 ? (p.stock - qty) : 0;
+          totalAdminSales += (p.price * qty);
+          
+          if (p.stock <= 3 && p.stock > 0) {
+            adminNotifications.insert(0, "Warning: ${p.title} stock is running low (${p.stock} left).");
+          } else if (p.stock == 0) {
+            adminNotifications.insert(0, "Alert: ${p.title} is now completely Out of Stock!");
+          }
+        }
         p.quantity = 0;
         p.inCart = false;
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'forget_password.dart';
 import 'signup_screen.dart';
+import 'admin_panel_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -12,6 +13,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +54,14 @@ class _SignInScreenState extends State<SignInScreen> {
                             _buildField(
                               hint: 'Email',
                               icon: Icons.email_outlined,
+                              controller: _emailController,
                             ),
                             const SizedBox(height: 12),
                             _buildField(
                               hint: 'Password',
                               icon: Icons.lock_outline,
                               obscure: true,
+                              controller: _passwordController,
                             ),
                             const SizedBox(height: 8),
                             Align(
@@ -84,10 +89,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               height: 48,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // validate and then navigate to Home
-                                  Navigator.of(
-                                    context,
-                                  ).pushReplacementNamed('/home');
+                                  if (_emailController.text.trim() == 'munna@gmail.com' && _passwordController.text == '123456') {
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const AdminPanelScreen()));
+                                  } else {
+                                    Navigator.of(context).pushReplacementNamed('/home');
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF1976D2),
@@ -175,8 +181,10 @@ class _SignInScreenState extends State<SignInScreen> {
     required String hint,
     required IconData icon,
     bool obscure = false,
+    TextEditingController? controller,
   }) {
     return TextFormField(
+      controller: controller,
       obscureText: obscure ? _obscurePassword : false,
       decoration: InputDecoration(
         filled: true,

@@ -123,6 +123,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
     // Filter products dynamically based on category and search query
     List<Product> displayedProducts = newDemoProducts.where((p) {
+      if (p.stock <= 0) return false;
       bool categoryMatch =
           currentCategoryStr == "All" || p.category == currentCategoryStr;
       bool searchMatch =
