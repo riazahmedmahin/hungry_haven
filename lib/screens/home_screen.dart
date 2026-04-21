@@ -888,7 +888,7 @@ class _ProductCardState extends State<ProductCard> {
                         TextSpan(
                           children: [
                             const TextSpan(
-                              text: "\$ ",
+                              text: "৳ ",
                               style: TextStyle(
                                 color: Color(0xFFFF6A42),
                                 fontWeight: FontWeight.bold,

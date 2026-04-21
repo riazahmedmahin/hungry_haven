@@ -207,7 +207,7 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                '\$${(product.price * (product.quantity > 0 ? product.quantity : 1)).toStringAsFixed(2)}',
+                                '৳${(product.price * (product.quantity > 0 ? product.quantity : 1)).toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 18,
@@ -268,7 +268,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  "\$${totalBill.toStringAsFixed(2)}",
+                  "৳${totalBill.toStringAsFixed(2)}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,

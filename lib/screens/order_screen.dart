@@ -127,14 +127,14 @@ class OrderScreen extends StatelessWidget {
                                       style: const TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      "${item['quantity']}x | \$${item['price'].toStringAsFixed(2)}",
+                                      "${item['quantity']}x | ৳${item['price'].toStringAsFixed(2)}",
                                       style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                                     ),
                                   ],
                                 ),
                               ),
                               Text(
-                                "\$${(item['price'] * item['quantity']).toStringAsFixed(2)}",
+                                "৳${(item['price'] * item['quantity']).toStringAsFixed(2)}",
                                 style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -147,7 +147,7 @@ class OrderScreen extends StatelessWidget {
                         children: [
                           const Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold)),
                           Text(
-                            "\$${order['total'].toStringAsFixed(2)}",
+                            "৳${order['total'].toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               color: Color(0xFFFF5D5D),

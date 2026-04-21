@@ -23,8 +23,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   @override
   void initState() {
     super.initState();
-    // Default to current month
-    _applyMonthFilter();
+    // Default to Today's report initially
+    DateTime now = DateTime.now();
+    _startDate = DateTime(now.year, now.month, now.day);
+    _endDate = DateTime(now.year, now.month, now.day);
   }
 
   void _applyMonthFilter() {
@@ -263,7 +265,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ],
                 ),
                 Text(
-                  "\$${todaySales.toStringAsFixed(2)}",
+                  "৳${todaySales.toStringAsFixed(2)}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 36,
@@ -428,7 +430,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "\$${dailySales[index].toStringAsFixed(0)}",
+                "৳${dailySales[index].toStringAsFixed(0)}",
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -693,7 +695,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "\$${filteredSales.toStringAsFixed(2)}",
+                        "৳${filteredSales.toStringAsFixed(2)}",
                         style: const TextStyle(
                           color: Colors.greenAccent,
                           fontSize: 36,
@@ -946,7 +948,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "\$${order['total'].toStringAsFixed(2)}",
+                        "৳${order['total'].toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           color: Colors.green,
@@ -1055,7 +1057,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "\$${product.price.toStringAsFixed(2)}",
+                          "৳${product.price.toStringAsFixed(2)}",
                           style: const TextStyle(
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF1976D2),

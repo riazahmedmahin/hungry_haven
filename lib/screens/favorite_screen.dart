@@ -157,7 +157,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  "\$${product.price.toStringAsFixed(2)}",
+                                  "৳${product.price.toStringAsFixed(2)}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w900,
                                     color: Color(0xFFFF5D5D),

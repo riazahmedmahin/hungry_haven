@@ -273,7 +273,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       Text(
-                        "\$${(product.price * localQuantity).toStringAsFixed(2)}",
+                        "৳${(product.price * localQuantity).toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,

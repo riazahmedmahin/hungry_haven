@@ -116,7 +116,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "\$ ${finalTotal.toStringAsFixed(2)}",
+                  "৳ ${finalTotal.toStringAsFixed(2)}",
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
@@ -225,7 +225,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
           ),
           Text(
-            "${isNegative ? "-\$" : "\$"}$value",
+            "${isNegative ? "-৳" : "৳"}$value",
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ],
