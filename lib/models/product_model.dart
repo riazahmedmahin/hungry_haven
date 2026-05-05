@@ -31,7 +31,7 @@ class Product {
 double totalAdminSales = 0.0;
 List<String> adminNotifications = [];
 
-// Using highly reliable Pexels JPEG images (like Onboarding) which are always visible and won't crash the emulator
+// Highly reliable Vecteezy fully-transparent preview URLs matching mockup perfectly
 List<Product> newDemoProducts = [
   Product(
     id: 1,

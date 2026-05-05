@@ -490,7 +490,8 @@ class OfferBanner extends StatelessWidget {
               child: Transform.rotate(
                 angle: 0.1,
                 child: CachedNetworkImage(
-                  imageUrl: 'https://pngimg.com/d/burger_sandwich_PNG4135.png',
+                  imageUrl:
+                      'https://pngimg.com/uploads/kfc_food/kfc_food_PNG21.png',
                   width: 160,
                   fit: BoxFit.contain,
                   memCacheWidth: 320,
