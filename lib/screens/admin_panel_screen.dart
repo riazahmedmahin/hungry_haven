@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
 import 'signin_screen.dart';
 import 'order_screen.dart';
@@ -32,7 +33,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   void _applyMonthFilter() {
     _startDate = DateTime(_selectedYear, _selectedMonth, 1);
     // Rough estimate for end of month bounds
-    _endDate = DateTime(_selectedYear, _selectedMonth + 1, 0); 
+    _endDate = DateTime(_selectedYear, _selectedMonth + 1, 0);
   }
 
   @override
@@ -310,7 +311,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           const SizedBox(height: 16),
           _build7DayGraph(),
           const SizedBox(height: 30),
-          
+
           // ---- PIE CHART SECTION ----
           if (categorySales.isNotEmpty) ...[
             const Text(
@@ -342,42 +343,78 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                     width: 100,
                     height: 100,
                     child: CustomPaint(
-                      painter: PieChartPainter(
-                        categorySales,
-                        [Colors.blueAccent, Colors.orange, Colors.purpleAccent, Colors.green, Colors.redAccent, Colors.amber],
-                      ),
+                      painter: PieChartPainter(categorySales, [
+                        Colors.blueAccent,
+                        Colors.orange,
+                        Colors.purpleAccent,
+                        Colors.green,
+                        Colors.redAccent,
+                        Colors.amber,
+                      ]),
                     ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: categorySales.entries.toList().asMap().entries.map((entry) {
-                        int index = entry.key;
-                        var cat = entry.value;
-                        List<Color> colors = [Colors.blueAccent, Colors.orange, Colors.purpleAccent, Colors.green, Colors.redAccent, Colors.amber];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Row(
-                            children: [
-                              Container(width: 12, height: 12, decoration: BoxDecoration(color: colors[index % colors.length], shape: BoxShape.circle)),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(cat.key, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                      children: categorySales.entries
+                          .toList()
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                            int index = entry.key;
+                            var cat = entry.value;
+                            List<Color> colors = [
+                              Colors.blueAccent,
+                              Colors.orange,
+                              Colors.purpleAccent,
+                              Colors.green,
+                              Colors.redAccent,
+                              Colors.amber,
+                            ];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: colors[index % colors.length],
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      cat.key,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Text(
+                                    "(${cat.value})",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text("(${cat.value})", style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                            );
+                          })
+                          .toList(),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-          // ---- END PIE CHART SECTION ----
 
+          // ---- END PIE CHART SECTION ----
           const SizedBox(height: 40),
         ],
       ),
@@ -463,8 +500,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-
-
   Widget _buildStatCard(
     String title,
     String value,
@@ -539,7 +574,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             String t = item['title'];
             itemsSold += q;
             productSales[t] = (productSales[t] ?? 0) + q;
-            
+
             // Find Category
             String cat = "Other";
             try {
@@ -574,19 +609,41 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Select Month & Year", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+              const Text(
+                "Select Month & Year",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.grey,
+                ),
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(15)),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<int>(
                           isExpanded: true,
                           value: _selectedYear,
-                          items: List.generate(10, (index) => 2024 + index).map((y) => DropdownMenuItem(value: y, child: Text(y.toString(), style: const TextStyle(fontWeight: FontWeight.bold)))).toList(),
+                          items: List.generate(10, (index) => 2024 + index)
+                              .map(
+                                (y) => DropdownMenuItem(
+                                  value: y,
+                                  child: Text(
+                                    y.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           onChanged: (val) {
                             if (val != null) {
                               setState(() {
@@ -603,15 +660,43 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(15)),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<int>(
                           isExpanded: true,
                           value: _selectedMonth,
-                          items: [
-                            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                          ].asMap().entries.map((e) => DropdownMenuItem(value: e.key + 1, child: Text(e.value, style: const TextStyle(fontWeight: FontWeight.bold)))).toList(),
+                          items:
+                              [
+                                    "Jan",
+                                    "Feb",
+                                    "Mar",
+                                    "Apr",
+                                    "May",
+                                    "Jun",
+                                    "Jul",
+                                    "Aug",
+                                    "Sep",
+                                    "Oct",
+                                    "Nov",
+                                    "Dec",
+                                  ]
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e.key + 1,
+                                      child: Text(
+                                        e.value,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                           onChanged: (val) {
                             if (val != null) {
                               setState(() {
@@ -628,7 +713,16 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.0),
-                child: Center(child: Text("OR", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12))),
+                child: Center(
+                  child: Text(
+                    "OR",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               ),
               GestureDetector(
                 onTap: () async {
@@ -652,18 +746,27 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.blueAccent.withOpacity(0.3)),
+                    border: Border.all(
+                      color: Colors.blueAccent.withOpacity(0.3),
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.date_range, color: Colors.blueAccent, size: 20),
+                      const Icon(
+                        Icons.date_range,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         _startDate == null
                             ? "Pick Custom Date Range"
                             : "Custom: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year} - ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}",
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),
                       ),
                     ],
                   ),
@@ -724,7 +827,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
 
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -969,11 +1071,11 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       "${item['quantity']}x ${item['title']}",
                       style: const TextStyle(fontSize: 12),
                     ),
-                    avatar: Image.network(
-                      item['image'],
+                    avatar: CachedNetworkImage(
+                      imageUrl: item['image'],
                       width: 20,
                       height: 20,
-                      errorBuilder: (_, __, ___) =>
+                      errorWidget: (_, __, ___) =>
                           const Icon(Icons.fastfood, size: 12),
                     ),
                   );
@@ -1024,10 +1126,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    product.image,
+                  child: CachedNetworkImage(
+                    imageUrl: product.image,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) =>
+                    errorWidget: (_, __, ___) =>
                         const Icon(Icons.fastfood, color: Colors.grey),
                   ),
                 ),
@@ -1410,9 +1512,10 @@ class PieChartPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
 
       canvas.drawArc(boundingSquare, startAngle, sweepAngle, true, paint);
-      
+
       // Calculate percentage text placement
-      if (sweepAngle > 0.3) { // Only draw text for slices big enough
+      if (sweepAngle > 0.3) {
+        // Only draw text for slices big enough
         double percentage = (value / total) * 100;
         double textAngle = startAngle + sweepAngle / 2;
         double textRadius = size.width / 3.5;
@@ -1431,7 +1534,10 @@ class PieChartPainter extends CustomPainter {
           textDirection: TextDirection.ltr,
         );
         textPainter.layout();
-        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
+        textPainter.paint(
+          canvas,
+          Offset(x - textPainter.width / 2, y - textPainter.height / 2),
+        );
       }
 
       startAngle += sweepAngle;

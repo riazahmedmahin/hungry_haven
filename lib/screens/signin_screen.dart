@@ -18,7 +18,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -89,10 +88,19 @@ class _SignInScreenState extends State<SignInScreen> {
                               height: 48,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_emailController.text.trim() == 'munna@gmail.com' && _passwordController.text == '123456') {
-                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const AdminPanelScreen()));
+                                  if (_emailController.text.trim() ==
+                                          'munna@gmail.com' &&
+                                      _passwordController.text == '123456') {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const AdminPanelScreen(),
+                                      ),
+                                    );
                                   } else {
-                                    Navigator.of(context).pushReplacementNamed('/home');
+                                    Navigator.of(
+                                      context,
+                                    ).pushReplacementNamed('/home');
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

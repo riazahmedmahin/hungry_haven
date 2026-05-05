@@ -1,13 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../models/product_model.dart';
 import 'product_details_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
-import 'favorite_screen.dart';
-import 'order_screen.dart';
 import 'menu_screen.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -367,7 +365,7 @@ class SearchAndFilter extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.08),
+                    color: Colors.grey.withValues(alpha: 0.08),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -476,7 +474,7 @@ class OfferBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFF6A42).withOpacity(0.3),
+              color: const Color(0xFFFF6A42).withValues(alpha: 0.3),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -491,10 +489,14 @@ class OfferBanner extends StatelessWidget {
               bottom: -15,
               child: Transform.rotate(
                 angle: 0.1,
-                child: Image.network(
-                  'https://pngimg.com/d/burger_sandwich_PNG4135.png',
+                child: CachedNetworkImage(
+                  imageUrl: 'https://pngimg.com/d/burger_sandwich_PNG4135.png',
                   width: 160,
                   fit: BoxFit.contain,
+                  memCacheWidth: 320,
+                  memCacheHeight: 320,
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 ),
               ),
             ),
@@ -594,7 +596,6 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
   @override
   void initState() {
     super.initState();
-    // Start with the currently selected item snapped smoothly to the center
     _scrollController = ScrollController(
       initialScrollOffset: widget.selectedIndex * itemWidth,
     );
@@ -608,59 +609,52 @@ class _CategoryArcScrollableState extends State<CategoryArcScrollable> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHalfWidth =
+        MediaQuery.of(context).size.width / 2 - (itemWidth / 2);
     return SizedBox(
       height: 200,
-      child: AnimatedBuilder(
-        animation: _scrollController,
-        builder: (context, child) {
-          double offset = 0;
-          if (_scrollController.hasClients) {
-            offset = _scrollController.offset;
-          } else {
-            offset = widget.selectedIndex * itemWidth;
-          }
+      child: ListView.builder(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: screenHalfWidth),
+        itemCount: categoryData.length,
+        itemBuilder: (context, index) {
+          final double myCenter = index * itemWidth;
 
-          return ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            // Ensure first and last items can reach exactly the horizontal center
-            padding: EdgeInsets.symmetric(
-              horizontal:
-                  MediaQuery.of(context).size.width / 2 - (itemWidth / 2),
-            ),
-            itemCount: categoryData.length,
-            itemBuilder: (context, index) {
-              double myCenter = index * itemWidth;
-              // Distance of this item from the active center of the screen
-              double distance = (offset - myCenter).abs();
+          return RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _scrollController,
+              builder: (context, child) {
+                double offset = _scrollController.hasClients
+                    ? _scrollController.offset
+                    : widget.selectedIndex * itemWidth;
 
-              // Calculate a dynamic arc vertical drop based on distance
-              // k * curve^2 creates a stunning smooth arc
-              double shift = math.pow((distance / 120), 2) * 25;
-              if (shift > 90)
-                shift = 90; // Clamp so items don't sink infinitely
+                final double distance = (offset - myCenter).abs();
+                double shift = math.pow((distance / 120), 2).toDouble() * 25;
+                if (shift > 90) shift = 90;
 
-              return SizedBox(
-                width: itemWidth,
-                child: Padding(
-                  padding: EdgeInsets.only(top: shift),
-                  child: CategoryItem(
-                    data: categoryData[index],
-                    isActive: widget.selectedIndex == index,
-                    onTap: () {
-                      widget.onCategoryChanged(index);
-                      // Smoothly snap the clicked item to the literal center/peak
-                      _scrollController.animateTo(
-                        myCenter,
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeOutCubic,
-                      );
-                    },
+                return SizedBox(
+                  width: itemWidth,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: shift),
+                    child: child,
                   ),
-                ),
-              );
-            },
+                );
+              },
+              child: CategoryItem(
+                data: categoryData[index],
+                isActive: widget.selectedIndex == index,
+                onTap: () {
+                  widget.onCategoryChanged(index);
+                  _scrollController.animateTo(
+                    myCenter,
+                    duration: const Duration(milliseconds: 350),
+                    curve: Curves.easeOutCubic,
+                  );
+                },
+              ),
+            ),
           );
         },
       ),
@@ -697,19 +691,23 @@ class CategoryItem extends StatelessWidget {
               boxShadow: [
                 if (isActive)
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.15),
+                    color: Colors.grey.withValues(alpha: 0.15),
                     blurRadius: 15,
                     spreadRadius: 2,
                     offset: const Offset(0, 5),
                   ),
               ],
             ),
-            child: Image.network(
-              data["image"]!,
-              fit: BoxFit
-                  .contain, // Transparent images perfectly rendered natively
-              errorBuilder: (context, error, stackTrace) =>
+            child: CachedNetworkImage(
+              imageUrl: data["image"]!,
+              fit: BoxFit.contain,
+              memCacheWidth: 140,
+              memCacheHeight: 140,
+              fadeInDuration: const Duration(milliseconds: 150),
+              errorWidget: (context, url, error) =>
                   const Icon(Icons.local_dining, color: Colors.grey),
+              placeholder: (context, url) =>
+                  const CircularProgressIndicator(strokeWidth: 2),
             ),
           ),
           const SizedBox(height: 8),
@@ -766,12 +764,14 @@ class ProductGrid extends StatelessWidget {
         itemCount: products.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: 30, // Large spacing for highly overgrown images
+          mainAxisSpacing: 30,
           crossAxisSpacing: 20,
-          childAspectRatio: 0.60,
+          childAspectRatio: 0.62,
         ),
         itemBuilder: (context, index) {
-          return ProductCard(product: products[index], onUpdate: onUpdate);
+          return RepaintBoundary(
+            child: ProductCard(product: products[index], onUpdate: onUpdate),
+          );
         },
       ),
     );
@@ -828,7 +828,7 @@ class _ProductCardState extends State<ProductCard> {
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.08),
+                  color: Colors.grey.withValues(alpha: 0.08),
                   blurRadius: 20,
                   spreadRadius: 2,
                   offset: const Offset(0, 10),
@@ -836,7 +836,7 @@ class _ProductCardState extends State<ProductCard> {
               ],
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 // Discount Badge
                 Container(
@@ -857,7 +857,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 // Title
                 Text(
                   product.title,
@@ -878,7 +878,7 @@ class _ProductCardState extends State<ProductCard> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const Spacer(),
+                const SizedBox(height: 10),
                 // Price and Add Button row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -945,13 +945,16 @@ class _ProductCardState extends State<ProductCard> {
           ),
           // FULL FLOATING IMAGE
           Positioned(
-            top: -15, // aggressive overlap
-            child: Image.network(
-              product.image,
-              width: 140, // very large image
+            top: -15,
+            child: CachedNetworkImage(
+              imageUrl: product.image,
+              width: 140,
               height: 140,
-              fit: BoxFit.contain, // pristine transparency bounds
-              errorBuilder: (context, error, stackTrace) => Container(
+              fit: BoxFit.contain,
+              memCacheWidth: 280,
+              memCacheHeight: 280,
+              fadeInDuration: const Duration(milliseconds: 200),
+              errorWidget: (context, url, error) => Container(
                 width: 130,
                 height: 130,
                 decoration: BoxDecoration(

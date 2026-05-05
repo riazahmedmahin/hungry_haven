@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'order_screen.dart';
 import 'home_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -176,10 +177,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.network(
-                iconUrl,
+              child: CachedNetworkImage(
+                imageUrl: iconUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) =>
+                errorWidget: (context, url, error) =>
                     const Icon(Icons.payment, color: Colors.grey),
               ),
             ),

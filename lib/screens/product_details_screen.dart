@@ -203,17 +203,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        _buildQtyBtn(
-                          Icons.add,
-                          () {
-                            if (localQuantity < product.stock) {
-                              setState(() => localQuantity++);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Only ${product.stock} items left in stock.")));
-                              adminNotifications.insert(0, "User attempted to order more ${product.title} than the available stock (${product.stock}).");
-                            }
-                          },
-                        ),
+                        _buildQtyBtn(Icons.add, () {
+                          if (localQuantity < product.stock) {
+                            setState(() => localQuantity++);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Only ${product.stock} items left in stock.",
+                                ),
+                              ),
+                            );
+                            adminNotifications.insert(
+                              0,
+                              "User attempted to order more ${product.title} than the available stock (${product.stock}).",
+                            );
+                          }
+                        }),
                       ],
                     ),
                   ),

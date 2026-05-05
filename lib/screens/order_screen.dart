@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 // Global list for paid orders to simulate a simple order history
 final List<Map<String, dynamic>> orderHistory = [];
@@ -110,10 +111,10 @@ class OrderScreen extends StatelessWidget {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    item['image'],
+                                  child: CachedNetworkImage(
+                                    imageUrl: item['image'],
                                     fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => const Icon(Icons.fastfood, size: 20),
+                                    errorWidget: (_, __, ___) => const Icon(Icons.fastfood, size: 20),
                                   ),
                                 ),
                               ),

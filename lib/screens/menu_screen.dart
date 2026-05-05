@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -96,6 +97,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             height: 30,
                             width: 30,
                             fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -118,15 +120,24 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
           ),
-          const SizedBox(height: 25), // Increased spacing
+          const SizedBox(height: 25),
           Expanded(
-            child: SingleChildScrollView(
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 20),
-              child: ProductGrid(
-                products: displayedProducts,
-                onUpdate: () => setState(() {}),
+              itemCount: displayedProducts.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 30,
+                crossAxisSpacing: 20,
+                childAspectRatio: 0.60,
               ),
+              itemBuilder: (context, index) {
+                return ProductCard(
+                  product: displayedProducts[index],
+                  onUpdate: () => setState(() {}),
+                );
+              },
             ),
           ),
         ],

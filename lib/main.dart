@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hungry_haven/screens/signin_screen.dart';
 import 'screens/home_screen.dart';
@@ -117,7 +118,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF2196F3).withOpacity(0.3),
+                        color: const Color(0xFF2196F3).withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -257,11 +258,18 @@ class _StartingScreenState extends State<StartingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Illustration (use demoData illustration)
-                Image.network(
-                  demoData[2]["illustration"],
+                CachedNetworkImage(
+                  imageUrl: demoData[2]["illustration"]!,
                   height: 260,
                   width: 260,
                   fit: BoxFit.contain,
+                  placeholder: (context, url) => const SizedBox(
+                    height: 260,
+                    width: 260,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.image_not_supported, size: 80),
                 ),
                 const SizedBox(height: 36),
 
