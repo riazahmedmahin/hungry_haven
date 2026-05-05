@@ -31,13 +31,13 @@ class Product {
 double totalAdminSales = 0.0;
 List<String> adminNotifications = [];
 
-// Highly reliable Vecteezy fully-transparent preview URLs matching mockup perfectly
+// Using highly reliable Pexels JPEG images (like Onboarding) which are always visible and won't crash the emulator
 List<Product> newDemoProducts = [
   Product(
     id: 1,
     title: "Noodles Twistara",
     subtitle: "With Spicy Sauce",
-    image: "https://pngimg.com/d/noodle_PNG38.png",
+    image: "https://pngimg.com/uploads/noodle/noodle_PNG38.png",
     price: 5.33,
     discount: "-25%",
     inCart: false,
@@ -47,7 +47,7 @@ List<Product> newDemoProducts = [
     id: 2,
     title: "Pizza Sicilia",
     subtitle: "Pizza Sicilia",
-    image: "https://pngimg.com/d/pizza_PNG44077.png",
+    image: "https://pngimg.com/uploads/pizza/pizza_PNG44029.png",
     price: 8.99,
     discount: "-25%",
     inCart: true,
@@ -57,7 +57,8 @@ List<Product> newDemoProducts = [
     id: 3,
     title: "Classic Cheese Burger",
     subtitle: "Beef Combo",
-    image: "https://pngimg.com/d/burger_sandwich_PNG4135.png",
+    image:
+        "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4159.png",
     price: 12.50,
     discount: "-10%",
     inCart: false,
@@ -67,7 +68,7 @@ List<Product> newDemoProducts = [
     id: 4,
     title: "Spicy Kebab",
     subtitle: "Chicken Roast",
-    image: "https://pngimg.com/d/kebab_PNG44.png",
+    image: "https://pngimg.com/uploads/kebab/kebab_PNG40.png",
     price: 14.10,
     discount: "-15%",
     inCart: false,
@@ -75,9 +76,9 @@ List<Product> newDemoProducts = [
   ),
   Product(
     id: 5,
-    title: "Chiken Shorma",
+    title: "Chicken Sandwitch",
     subtitle: "Organic Fruit",
-    image: "https://www.pngmart.com/files/23/Food-PNG-Isolated-HD.png",
+    image: "https://pngimg.com/uploads/sandwich/sandwich_PNG45.png",
     price: 3.50,
     discount: "-10%",
     inCart: false,

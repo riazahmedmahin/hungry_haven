@@ -766,7 +766,7 @@ class ProductGrid extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 30,
           crossAxisSpacing: 20,
-          childAspectRatio: 0.62,
+          childAspectRatio: 0.68,
         ),
         itemBuilder: (context, index) {
           return RepaintBoundary(
@@ -811,6 +811,7 @@ class _ProductCardState extends State<ProductCard> {
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
+        fit: StackFit.expand,
         children: [
           // Main Background Card
           Container(
@@ -878,7 +879,7 @@ class _ProductCardState extends State<ProductCard> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
                 // Price and Add Button row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
