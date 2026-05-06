@@ -36,7 +36,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ClipPath(
             clipper: SimpleHeaderClipper(),
             child: Container(
-              height: 350,
+              height:
+                  MediaQuery.of(context).size.height * 0.33, // Reduced from 0.4
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -95,27 +96,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        width: 280,
-                        height: 280,
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        height: MediaQuery.of(context).size.width * 0.55,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 30,
-                              offset: const Offset(0, 10),
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 25,
+                              offset: const Offset(0, 8),
                             ),
                           ],
                         ),
                       ),
                       Image.network(
                         product.image,
-                        width: 300,
-                        height: 300,
+                        width: MediaQuery.of(context).size.width * 0.62,
+                        height: MediaQuery.of(context).size.width * 0.62,
                         fit: BoxFit.contain,
                         errorBuilder: (_, __, ___) => const Icon(
                           Icons.fastfood,
-                          size: 100,
+                          size: 80,
                           color: Colors.white,
                         ),
                       ),
@@ -125,10 +126,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   //const SizedBox(height: 10),
                   Text(
                     product.title,
-                    style: const TextStyle(
-                      fontSize: 26,
+                    style: TextStyle(
+                      fontSize:
+                          MediaQuery.of(context).size.width *
+                          0.065, // Slightly reduced
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF1F1F1F),
+                      color: const Color(0xFF1F1F1F),
                     ),
                   ),
 
@@ -166,7 +169,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 8), // Reduced from 15
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -179,8 +182,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
 
-                  const SizedBox(height: 15),
-
+                  const SizedBox(height: 8), // Reduced from 15
                   // Quantity Selector
                   Container(
                     width: 140,
@@ -224,7 +226,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12), // Reduced from 20
 
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -233,17 +235,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       child: Text(
                         "Ingredients",
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10), // Reduced from 15
                   const IngredientShowcase(),
 
-                  const SizedBox(height: 120),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 110),
                 ],
               ),
             ),
@@ -253,7 +255,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           Positioned(
             left: 20,
             right: 20,
-            bottom: 25,
+            bottom: 10,
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -377,7 +379,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return GestureDetector(
       onTap: () => setState(() => selectedSize = size),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFD32F2F) : Colors.white,
           borderRadius: BorderRadius.circular(25),
@@ -387,7 +389,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           size,
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.grey.shade600,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

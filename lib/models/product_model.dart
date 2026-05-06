@@ -105,6 +105,26 @@ List<Product> newDemoProducts = [
     inCart: false,
     category: "Food",
   ),
+  Product(
+    id: 8,
+    title: "KFC Bucket",
+    subtitle: "Crispy Chicken",
+    image: "https://pngimg.com/uploads/kfc_food/kfc_food_PNG21.png",
+    price: 15.99,
+    discount: "-25%",
+    inCart: false,
+    category: "Food",
+  ),
+  Product(
+    id: 9,
+    title: "Zinger Burger",
+    subtitle: "Spicy & Fresh",
+    image: "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
+    price: 9.50,
+    discount: "-10%",
+    inCart: false,
+    category: "Food",
+  ),
 ];
 
 final List<Map<String, String>> categoryData = [

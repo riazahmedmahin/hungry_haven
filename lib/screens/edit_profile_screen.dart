@@ -20,7 +20,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController = TextEditingController(text: "Jhon Doe");
     _emailController = TextEditingController(text: "jhon.doe@example.com");
     _phoneController = TextEditingController(text: "+1 234 567 890");
-    _addressController = TextEditingController(text: "123 Street, New York, USA");
+    _addressController = TextEditingController(
+      text: "123 Street, New York, USA",
+    );
   }
 
   @override
@@ -42,7 +44,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+            size: 20,
+          ),
         ),
         title: const Text(
           "Edit Profile",
@@ -54,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -100,7 +106,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // Form Fields
               _buildModernTextField(
@@ -108,35 +114,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 label: "Full Name",
                 icon: Icons.person_outline,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildModernTextField(
                 controller: _emailController,
                 label: "Email Address",
                 icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildModernTextField(
                 controller: _phoneController,
                 label: "Phone Number",
                 icon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildModernTextField(
                 controller: _addressController,
                 label: "Address",
                 icon: Icons.location_on_outlined,
               ),
-              
+
               const SizedBox(height: 100), // Push button down
-              
               // Save Button
               Container(
                 width: double.infinity,
-                height: 60,
+                height: 50,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(12),
                   gradient: const LinearGradient(
                     colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
                     begin: Alignment.topLeft,
@@ -173,8 +178,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: const Text(
                     "Save Changes",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
                   ),
@@ -210,7 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.03),
@@ -233,7 +238,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.all(20),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 16,
+              ),
               hintText: "Enter your $label",
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
             ),

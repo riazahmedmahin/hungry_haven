@@ -187,7 +187,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                         });
                       },
                     ),
-                    const SizedBox(height: 0),
+                    const SizedBox(height: 8),
                     ProductGrid(
                       products: displayedProducts,
                       onUpdate: widget.onUpdate,
@@ -504,14 +504,17 @@ class _OfferBannerState extends State<OfferBanner> {
       "image": "https://pngimg.com/uploads/kfc_food/kfc_food_PNG21.png",
       "colors": [Color(0xFFFF9472), Color.fromARGB(255, 255, 57, 2)],
       "shadow": Color(0xFFFF6A42),
+      "productIndex": 7,
     },
     {
       "title": "Your offer\n10% Off",
       "buttonText": "Claim Now",
-      "image": "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
+      "image":
+          "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
       "colors": [Color(0xFF42A5F5), Color(0xFF1976D2)],
       "shadow": Color(0xFF1976D2),
-    }
+      "productIndex": 8,
+    },
   ];
 
   @override
@@ -548,7 +551,9 @@ class _OfferBannerState extends State<OfferBanner> {
               height: 6,
               width: _currentPage == index ? 20 : 6,
               decoration: BoxDecoration(
-                color: _currentPage == index ? const Color(0xFFFF6A42) : Colors.grey.shade300,
+                color: _currentPage == index
+                    ? const Color(0xFFFF6A42)
+                    : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
@@ -559,87 +564,110 @@ class _OfferBannerState extends State<OfferBanner> {
   }
 
   Widget _buildBannerItem(Map<String, dynamic> banner) {
-    return Container(
-      margin: const EdgeInsets.only(right: 0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: banner["colors"],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: (banner["shadow"] as Color).withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -10,
-            top: -15,
-            bottom: -15,
-            child: Transform.rotate(
-              angle: 0.1,
-              child: CachedNetworkImage(
-                imageUrl: banner["image"],
-                width: 160,
-                fit: BoxFit.contain,
-                errorWidget: (context, url, error) => const SizedBox.shrink(),
+    return GestureDetector(
+      onTap: () {
+        if (newDemoProducts.length > banner["productIndex"]) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailsScreen(
+                product: newDemoProducts[banner["productIndex"]],
               ),
             ),
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: banner["colors"],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          Positioned(
-            left: 20,
-            top: 0,
-            bottom: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 8),
-                Text(
-                  banner["title"],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
-                    height: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    // Action for banner
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: banner["colors"][1],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    minimumSize: const Size(0, 36),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    banner["buttonText"],
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ],
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: (banner["shadow"] as Color).withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -10,
+              top: -15,
+              bottom: -15,
+              child: Transform.rotate(
+                angle: 0.1,
+                child: CachedNetworkImage(
+                  imageUrl: banner["image"],
+                  width: 160,
+                  fit: BoxFit.contain,
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 20,
+              top: 0,
+              bottom: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
+                    banner["title"],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 8), // Reduced from 12
+                  ElevatedButton(
+                    onPressed: () {
+                      if (newDemoProducts.length > banner["productIndex"]) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailsScreen(
+                              product: newDemoProducts[banner["productIndex"]],
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: banner["colors"][1],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
+                      minimumSize: const Size(0, 36),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      banner["buttonText"],
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -836,7 +864,8 @@ class ProductGrid extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 30,
           crossAxisSpacing: 20,
-          childAspectRatio: 0.68,
+          childAspectRatio:
+              0.7, // Increased from 0.65 to reduce empty space at bottom
         ),
         itemBuilder: (context, index) {
           return RepaintBoundary(
@@ -886,13 +915,13 @@ class _ProductCardState extends State<ProductCard> {
           // Main Background Card
           Container(
             margin: const EdgeInsets.only(
-              top: 80,
-            ), // Push the box deeply to allow full image out-of-bounds rendering
+              top: 70, // Reduced from 80 to pull the box up
+            ),
             padding: const EdgeInsets.only(
-              top: 55,
-              left: 16,
-              right: 16,
-              bottom: 16,
+              top: 40, // Reduced from 45 to be more compact
+              left: 14,
+              right: 14,
+              bottom: 12,
             ),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -955,34 +984,37 @@ class _ProductCardState extends State<ProductCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: "৳ ",
-                              style: TextStyle(
-                                color: Color(0xFFFF6A42),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: "৳ ",
+                                style: TextStyle(
+                                  color: Color(0xFFFF6A42),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
-                            ),
-                            TextSpan(
-                              text:
-                                  (product.price *
-                                          (product.quantity > 0
-                                              ? product.quantity
-                                              : 1))
-                                      .toStringAsFixed(2),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black,
+                              TextSpan(
+                                text:
+                                    (product.price *
+                                            (product.quantity > 0
+                                                ? product.quantity
+                                                : 1))
+                                        .toStringAsFixed(2),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          maxLines: 1,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     GestureDetector(
