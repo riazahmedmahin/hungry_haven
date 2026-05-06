@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../models/product_model.dart';
@@ -455,122 +456,190 @@ class SearchAndFilter extends StatelessWidget {
   }
 }
 
-class OfferBanner extends StatelessWidget {
+class OfferBanner extends StatefulWidget {
   const OfferBanner({super.key});
 
   @override
+  State<OfferBanner> createState() => _OfferBannerState();
+}
+
+class _OfferBannerState extends State<OfferBanner> {
+  int _currentPage = 0;
+  final PageController _pageController = PageController();
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = _currentPage + 1;
+        if (nextPage >= banners.length) {
+          nextPage = 0;
+        }
+        _pageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  final List<Map<String, dynamic>> banners = [
+    {
+      "title": "Discount\n25% Off",
+      "buttonText": "Order Now",
+      "image": "https://pngimg.com/uploads/kfc_food/kfc_food_PNG21.png",
+      "colors": [Color(0xFFFF9472), Color.fromARGB(255, 255, 57, 2)],
+      "shadow": Color(0xFFFF6A42),
+    },
+    {
+      "title": "Your offer\n10% Off",
+      "buttonText": "Claim Now",
+      "image": "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
+      "colors": [Color(0xFF42A5F5), Color(0xFF1976D2)],
+      "shadow": Color(0xFF1976D2),
+    }
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          // Vibrant gradient matching the mockup aesthetic
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF9472), Color.fromARGB(255, 255, 57, 2)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 150,
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              itemCount: banners.length,
+              itemBuilder: (context, index) {
+                final banner = banners[index];
+                return _buildBannerItem(banner);
+              },
+            ),
           ),
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF6A42).withValues(alpha: 0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
         ),
-        child: Stack(
-          children: [
-            // Rotated food image for a dynamic pop-out effect
-            Positioned(
-              right: -10,
-              top: -15,
-              bottom: -15,
-              child: Transform.rotate(
-                angle: 0.1,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://pngimg.com/uploads/kfc_food/kfc_food_PNG21.png',
-                  width: 160,
-                  fit: BoxFit.contain,
-                  memCacheWidth: 320,
-                  memCacheHeight: 320,
-                  fadeInDuration: const Duration(milliseconds: 200),
-                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            banners.length,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.only(right: 6),
+              height: 6,
+              width: _currentPage == index ? 20 : 6,
+              decoration: BoxDecoration(
+                color: _currentPage == index ? const Color(0xFFFF6A42) : Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBannerItem(Map<String, dynamic> banner) {
+    return Container(
+      margin: const EdgeInsets.only(right: 0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: banner["colors"],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: (banner["shadow"] as Color).withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -10,
+            top: -15,
+            bottom: -15,
+            child: Transform.rotate(
+              angle: 0.1,
+              child: CachedNetworkImage(
+                imageUrl: banner["image"],
+                width: 160,
+                fit: BoxFit.contain,
+                errorWidget: (context, url, error) => const SizedBox.shrink(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 20,
+            top: 0,
+            bottom: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  banner["title"],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    height: 1.1,
+                  ),
                 ),
-              ),
-            ),
-            // Text and CTA
-            Positioned(
-              left: 20,
-              top: 0,
-              bottom: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(
-                  //     horizontal: 10,
-                  //     vertical: 4,
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white.withOpacity(0.2),
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Discount\n25% Off",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                      height: 1.1,
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () {
+                    // Action for banner
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: banner["colors"][1],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    minimumSize: const Size(0, 36),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    banner["buttonText"],
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (newDemoProducts.length > 2) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailsScreen(
-                              product:
-                                  newDemoProducts[2], // Classic Cheese Burger as featured in banner
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFFFF6A42),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      minimumSize: const Size(0, 36),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      "Order Now",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

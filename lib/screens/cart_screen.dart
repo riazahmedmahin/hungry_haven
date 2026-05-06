@@ -117,12 +117,11 @@ class _CartScreenState extends State<CartScreen> {
                               width: 80,
                               height: 80,
                               fit: BoxFit.contain,
-                              errorWidget: (context, url, error) =>
-                                  const Icon(
-                                    Icons.fastfood,
-                                    color: Colors.grey,
-                                    size: 50,
-                                  ),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.fastfood,
+                                color: Colors.grey,
+                                size: 50,
+                              ),
                             ),
                             const SizedBox(height: 12),
                             Container(
@@ -168,8 +167,19 @@ class _CartScreenState extends State<CartScreen> {
                                       if (product.quantity < product.stock) {
                                         setState(() => product.quantity++);
                                       } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Only ${product.stock} items left in stock.")));
-                                        adminNotifications.insert(0, "User attempted to order more ${product.title} than the available stock (${product.stock}).");
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Only ${product.stock} items left in stock.",
+                                            ),
+                                          ),
+                                        );
+                                        adminNotifications.insert(
+                                          0,
+                                          "User attempted to order more ${product.title} than the available stock (${product.stock}).",
+                                        );
                                       }
                                     },
                                     child: const Icon(
