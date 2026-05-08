@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'dart:math' as math;
 import '../models/product_model.dart';
 import 'cart_screen.dart';
@@ -109,17 +110,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ],
                         ),
                       ),
-                      Image.network(
-                        product.image,
-                        width: MediaQuery.of(context).size.width * 0.62,
-                        height: MediaQuery.of(context).size.width * 0.62,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.fastfood,
-                          size: 80,
-                          color: Colors.white,
-                        ),
-                      ),
+                      product.image.startsWith('http')
+                          ? Image.network(
+                              product.image,
+                              width: MediaQuery.of(context).size.width * 0.62,
+                              height: MediaQuery.of(context).size.width * 0.62,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.fastfood,
+                                size: 80,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Image.file(
+                              File(product.image),
+                              width: MediaQuery.of(context).size.width * 0.62,
+                              height: MediaQuery.of(context).size.width * 0.62,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.fastfood,
+                                size: 80,
+                                color: Colors.white,
+                              ),
+                            ),
                     ],
                   ),
 

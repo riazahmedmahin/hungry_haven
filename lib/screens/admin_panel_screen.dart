@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import '../models/product_model.dart';
 import 'signin_screen.dart';
 import 'order_screen.dart';
@@ -147,7 +149,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       ),
       floatingActionButton: _currentIndex == 2
           ? FloatingActionButton.extended(
-              onPressed: _showAddProductBottomSheet,
+              onPressed: () => _showProductFormBottomSheet(),
               backgroundColor: Colors.blueAccent,
               elevation: 4,
               icon: const Icon(Icons.add, color: Colors.white),
@@ -1071,13 +1073,21 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       "${item['quantity']}x ${item['title']}",
                       style: const TextStyle(fontSize: 12),
                     ),
-                    avatar: CachedNetworkImage(
-                      imageUrl: item['image'],
-                      width: 20,
-                      height: 20,
-                      errorWidget: (_, __, ___) =>
-                          const Icon(Icons.fastfood, size: 12),
-                    ),
+                    avatar: item['image'].startsWith('http')
+                        ? CachedNetworkImage(
+                            imageUrl: item['image'],
+                            width: 20,
+                            height: 20,
+                            errorWidget: (_, __, ___) =>
+                                const Icon(Icons.fastfood, size: 12),
+                          )
+                        : Image.file(
+                            File(item['image']),
+                            width: 20,
+                            height: 20,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.fastfood, size: 12),
+                          ),
                   );
                 }).toList(),
               ),
@@ -1126,12 +1136,19 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CachedNetworkImage(
-                    imageUrl: product.image,
-                    fit: BoxFit.contain,
-                    errorWidget: (_, __, ___) =>
-                        const Icon(Icons.fastfood, color: Colors.grey),
-                  ),
+                  child: product.image.startsWith('http')
+                      ? CachedNetworkImage(
+                          imageUrl: product.image,
+                          fit: BoxFit.contain,
+                          errorWidget: (_, __, ___) =>
+                              const Icon(Icons.fastfood, color: Colors.grey),
+                        )
+                      : Image.file(
+                          File(product.image),
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.fastfood, color: Colors.grey),
+                        ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -1198,7 +1215,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               const SizedBox(width: 8),
               IconButton(
                 icon: const Icon(Icons.edit_square, color: Colors.blueAccent),
-                onPressed: () => _showEditStockDialog(product),
+                onPressed: () => _showProductFormBottomSheet(product: product),
               ),
             ],
           ),
@@ -1208,130 +1225,283 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   }
 
   // ================= Bottom Sheets & Dialogs =================
-  void _showAddProductBottomSheet() {
-    final titleCtrl = TextEditingController();
-    final categoryCtrl = TextEditingController(text: "Food");
-    final priceCtrl = TextEditingController();
-    final stockCtrl = TextEditingController(text: "10");
-    final discountCtrl = TextEditingController(text: "No");
+  void _showProductFormBottomSheet({Product? product}) {
+    final bool isEditing = product != null;
+    final titleCtrl = TextEditingController(text: isEditing ? product.title : "");
+    final subtitleCtrl =
+        TextEditingController(text: isEditing ? product.subtitle : "");
+    final priceCtrl =
+        TextEditingController(text: isEditing ? product.price.toString() : "");
+    final categoryCtrl =
+        TextEditingController(text: isEditing ? product.category : "");
+    final stockCtrl = TextEditingController(
+        text: isEditing ? product.stock.toString() : "10");
+    final discountCtrl =
+        TextEditingController(text: isEditing ? product.discount : "No");
+    final imageCtrl = TextEditingController(text: isEditing ? product.image : "");
+    File? pickedImage;
+    if (isEditing && !product.image.startsWith('http')) {
+      pickedImage = File(product.image);
+    }
+
+    void pickImage(StateSetter setModalState) async {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        setModalState(() {
+          pickedImage = File(image.path);
+          imageCtrl.text = image.path;
+        });
+      }
+    }
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            top: 30,
-            left: 24,
-            right: 24,
-          ),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              //crossAxisSize: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "Add New Product",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Fill in the details to publish a new menu item globally.",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 24),
-                _buildModernTextField(titleCtrl, "Food Name", Icons.fastfood),
-                const SizedBox(height: 16),
-                _buildModernTextField(categoryCtrl, "Category", Icons.category),
-                const SizedBox(height: 16),
-                Row(
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                top: 30,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: _buildModernTextField(
-                        priceCtrl,
-                        "Price",
-                        Icons.attach_money,
-                        isNumber: true,
+                    Center(
+                      child: Container(
+                        width: 50,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildModernTextField(
-                        stockCtrl,
-                        "Stock Count",
-                        Icons.inventory,
-                        isNumber: true,
+                    const SizedBox(height: 24),
+                    Text(
+                      isEditing ? "Edit Product" : "Add New Product",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Text(
+                      isEditing
+                          ? "Update the details for '${product.title}'."
+                          : "Fill in the details to publish a new menu item globally.",
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => pickImage(setModalState),
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: pickedImage != null ||
+                                  (isEditing &&
+                                      product.image.startsWith('http'))
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: pickedImage != null
+                                      ? Image.file(
+                                          pickedImage!,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.network(
+                                          product!.image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.grey,
+                                      size: 40,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "Pick Image",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildModernTextField(
+                      titleCtrl,
+                      "Food Name",
+                      Icons.fastfood,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildModernTextField(
+                      subtitleCtrl,
+                      "Subtitle (e.g. Spicy & Fresh)",
+                      Icons.description,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildModernTextField(
+                      categoryCtrl,
+                      "Category",
+                      Icons.category,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildModernTextField(
+                      imageCtrl,
+                      "Image URL (Optional)",
+                      Icons.link,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildModernTextField(
+                            priceCtrl,
+                            "Price",
+                            Icons.attach_money,
+                            isNumber: true,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildModernTextField(
+                            stockCtrl,
+                            "Stock Count",
+                            Icons.inventory,
+                            isNumber: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildModernTextField(
+                      discountCtrl,
+                      "Discount",
+                      Icons.local_offer,
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        if (isEditing)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: SizedBox(
+                                height: 55,
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      newDemoProducts.removeWhere(
+                                          (p) => p.id == product.id);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                    side: const BorderSide(color: Colors.red),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: const Text("Delete"),
+                                ),
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height: 55,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (isEditing) {
+                                    product.title = titleCtrl.text;
+                                    product.subtitle = subtitleCtrl.text;
+                                    product.category = categoryCtrl.text;
+                                    product.price =
+                                        double.tryParse(priceCtrl.text) ??
+                                            product.price;
+                                    product.stock =
+                                        int.tryParse(stockCtrl.text) ??
+                                            product.stock;
+                                    product.discount = discountCtrl.text;
+                                    product.image = imageCtrl.text;
+                                  } else {
+                                    newDemoProducts.add(
+                                      Product(
+                                        id: DateTime.now()
+                                            .millisecondsSinceEpoch,
+                                        title: titleCtrl.text.isEmpty
+                                            ? "Unknown"
+                                            : titleCtrl.text,
+                                        subtitle: subtitleCtrl.text.isEmpty
+                                            ? "Newly Added"
+                                            : subtitleCtrl.text,
+                                        image: imageCtrl.text.isEmpty
+                                            ? "https://pngimg.com/d/burger_sandwich_PNG4135.png"
+                                            : imageCtrl.text,
+                                        price:
+                                            double.tryParse(priceCtrl.text) ??
+                                                0.0,
+                                        category: categoryCtrl.text,
+                                        discount: discountCtrl.text,
+                                        stock:
+                                            int.tryParse(stockCtrl.text) ?? 10,
+                                      ),
+                                    );
+                                  }
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Text(
+                                isEditing ? "Save Changes" : "Publish Product",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
                   ],
                 ),
-                const SizedBox(height: 16),
-                _buildModernTextField(
-                  discountCtrl,
-                  "Discount",
-                  Icons.local_offer,
-                ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        newDemoProducts.add(
-                          Product(
-                            id: DateTime.now().millisecondsSinceEpoch,
-                            title: titleCtrl.text.isEmpty
-                                ? "Unknown"
-                                : titleCtrl.text,
-                            subtitle: "Newly Added",
-                            image:
-                                "https://pngimg.com/d/burger_sandwich_PNG4135.png",
-                            price: double.tryParse(priceCtrl.text) ?? 0.0,
-                            category: categoryCtrl.text,
-                            discount: discountCtrl.text,
-                            stock: int.tryParse(stockCtrl.text) ?? 10,
-                          ),
-                        );
-                      });
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Product Published Globally!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: const Text(
-                      "Publish Product",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -1364,53 +1534,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-  void _showEditStockDialog(Product product) {
-    final stockCtrl = TextEditingController(text: product.stock.toString());
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          title: Text(
-            "Edit Stock: ${product.title}",
-            style: const TextStyle(fontSize: 16),
-          ),
-          content: _buildModernTextField(
-            stockCtrl,
-            "Current Stock",
-            Icons.inventory,
-            isNumber: true,
-          ),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.grey),
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  product.stock = int.tryParse(stockCtrl.text) ?? product.stock;
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   void _showNotificationsDialog() {
     showDialog(

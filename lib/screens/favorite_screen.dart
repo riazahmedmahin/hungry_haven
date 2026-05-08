@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:hungry_haven/screens/home_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
@@ -132,11 +133,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               color: Colors.grey.shade50,
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            child: CachedNetworkImage(
-                              imageUrl: product.image,
-                              fit: BoxFit.contain,
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
-                            ),
+                            child: product.image.startsWith('http')
+                                ? CachedNetworkImage(
+                                    imageUrl: product.image,
+                                    fit: BoxFit.contain,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  )
+                                : Image.file(
+                                    File(product.image),
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        const Icon(Icons.error),
+                                  ),
                           ),
                           const SizedBox(width: 15),
                           Expanded(

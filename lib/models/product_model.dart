@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class Product {
   final int id;
-  final String title;
-  final String subtitle;
-  final String image;
-  final double price;
-  final String discount;
+  String title;
+  String subtitle;
+  String image;
+  double price;
+  String discount;
   bool inCart;
-  final String category;
+  String category;
   int quantity;
   bool isFavorite;
   int stock;
@@ -68,7 +68,7 @@ List<Product> newDemoProducts = [
     id: 4,
     title: "Spicy Kebab",
     subtitle: "Chicken Roast",
-    image: "https://pngimg.com/uploads/kebab/kebab_PNG40.png",
+    image: "https://pngimg.com/uploads/kebab/small/kebab_PNG25.png",
     price: 14.10,
     discount: "-15%",
     inCart: false,
@@ -119,7 +119,8 @@ List<Product> newDemoProducts = [
     id: 9,
     title: "Zinger Burger",
     subtitle: "Spicy & Fresh",
-    image: "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
+    image:
+        "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
     price: 9.50,
     discount: "-10%",
     inCart: false,

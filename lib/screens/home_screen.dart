@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -564,14 +565,48 @@ class _OfferBannerState extends State<OfferBanner> {
   }
 
   Widget _buildBannerItem(Map<String, dynamic> banner) {
+    // Get the linked product
+    final product = (newDemoProducts.length > banner["productIndex"])
+        ? newDemoProducts[banner["productIndex"]]
+        : null;
+
+    // Determine the title based on product discount
+    String displayTitle = banner["title"];
+    if (product != null) {
+      if (product.discount == "No") {
+        displayTitle = banner["productIndex"] == 7 ? "Special\nFor You" : "Hot Deal\nFresh Now";
+      } else {
+        // Clean up discount string (remove leading - if present, and add % Off if it's just a number)
+        String cleanDiscount = product.discount.startsWith('-')
+            ? product.discount.substring(1)
+            : product.discount;
+
+        if (!cleanDiscount.contains('%') &&
+            !cleanDiscount.toLowerCase().contains('off') &&
+            double.tryParse(cleanDiscount.replaceAll(RegExp(r'[^0-9.]'), '')) !=
+                null) {
+          cleanDiscount = "$cleanDiscount%";
+        }
+
+        if (banner["productIndex"] == 7) {
+          displayTitle = "Discount\n$cleanDiscount Off";
+        } else {
+          displayTitle = "Your offer\n$cleanDiscount Off";
+        }
+      }
+    }
+
+    // Determine image based on product image
+    final String imagePath = product?.image ?? banner["image"];
+
     return GestureDetector(
       onTap: () {
-        if (newDemoProducts.length > banner["productIndex"]) {
+        if (product != null) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ProductDetailsScreen(
-                product: newDemoProducts[banner["productIndex"]],
+                product: product,
               ),
             ),
           );
@@ -602,12 +637,19 @@ class _OfferBannerState extends State<OfferBanner> {
               bottom: -15,
               child: Transform.rotate(
                 angle: 0.1,
-                child: CachedNetworkImage(
-                  imageUrl: banner["image"],
-                  width: 160,
-                  fit: BoxFit.contain,
-                  errorWidget: (context, url, error) => const SizedBox.shrink(),
-                ),
+                child: imagePath.startsWith('http')
+                    ? CachedNetworkImage(
+                        imageUrl: imagePath,
+                        width: 160,
+                        fit: BoxFit.contain,
+                        errorWidget: (context, url, error) =>
+                            const SizedBox.shrink(),
+                      )
+                    : Image.file(
+                        File(imagePath),
+                        width: 160,
+                        fit: BoxFit.contain,
+                      ),
               ),
             ),
             Positioned(
@@ -620,7 +662,7 @@ class _OfferBannerState extends State<OfferBanner> {
                 children: [
                   const SizedBox(height: 8),
                   Text(
-                    banner["title"],
+                    displayTitle,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
@@ -631,12 +673,12 @@ class _OfferBannerState extends State<OfferBanner> {
                   const SizedBox(height: 8), // Reduced from 12
                   ElevatedButton(
                     onPressed: () {
-                      if (newDemoProducts.length > banner["productIndex"]) {
+                      if (product != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProductDetailsScreen(
-                              product: newDemoProducts[banner["productIndex"]],
+                              product: product,
                             ),
                           ),
                         );
@@ -938,24 +980,29 @@ class _ProductCardState extends State<ProductCard> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                // Discount Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1F1F1F),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    product.discount,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                // Discount Badge (Fixed height to maintain alignment)
+                SizedBox(
+                  height: 22,
+                  child: (product.discount != "No" && product.discount.isNotEmpty)
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1F1F1F),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            product.discount,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
                 const SizedBox(height: 10),
                 // Title
@@ -1049,24 +1096,40 @@ class _ProductCardState extends State<ProductCard> {
           // FULL FLOATING IMAGE
           Positioned(
             top: -15,
-            child: CachedNetworkImage(
-              imageUrl: product.image,
-              width: 140,
-              height: 140,
-              fit: BoxFit.contain,
-              memCacheWidth: 280,
-              memCacheHeight: 280,
-              fadeInDuration: const Duration(milliseconds: 200),
-              errorWidget: (context, url, error) => Container(
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.fastfood, color: Colors.grey, size: 40),
-              ),
-            ),
+            child: product.image.startsWith('http')
+                ? CachedNetworkImage(
+                    imageUrl: product.image,
+                    width: 140,
+                    height: 140,
+                    fit: BoxFit.contain,
+                    memCacheWidth: 280,
+                    memCacheHeight: 280,
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    errorWidget: (context, url, error) => Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 40),
+                    ),
+                  )
+                : Image.file(
+                    File(product.image),
+                    width: 140,
+                    height: 140,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 40),
+                    ),
+                  ),
           ),
           // Heart Icon for Favorites
           Positioned(

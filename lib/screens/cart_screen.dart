@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:hungry_haven/models/product_model.dart';
 import 'package:hungry_haven/screens/home_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -112,17 +113,31 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Column(
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: product.image,
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.contain,
-                              errorWidget: (context, url, error) => const Icon(
-                                Icons.fastfood,
-                                color: Colors.grey,
-                                size: 50,
-                              ),
-                            ),
+                            product.image.startsWith('http')
+                                ? CachedNetworkImage(
+                                    imageUrl: product.image,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
+                                      Icons.fastfood,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    ),
+                                  )
+                                : Image.file(
+                                    File(product.image),
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        const Icon(
+                                      Icons.fastfood,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    ),
+                                  ),
                             const SizedBox(height: 12),
                             Container(
                               padding: const EdgeInsets.symmetric(
