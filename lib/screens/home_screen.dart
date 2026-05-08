@@ -160,7 +160,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Catagory"),
+                  child: Text("Category"),
                 ),
                 // Circular huge curved background simulating the ellipse backdrop
                 Positioned(
@@ -508,7 +508,7 @@ class _OfferBannerState extends State<OfferBanner> {
     },
     {
       "title": "Your offer\n10% Off",
-      "buttonText": "Claim Now",
+      "buttonText": "Order Now",
       "image":
           "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
       "colors": [Color(0xFF42A5F5), Color(0xFF1976D2)],
@@ -552,7 +552,7 @@ class _OfferBannerState extends State<OfferBanner> {
               width: _currentPage == index ? 20 : 6,
               decoration: BoxDecoration(
                 color: _currentPage == index
-                    ? const Color(0xFFFF6A42)
+                    ? Colors.grey.shade300
                     : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(3),
               ),
@@ -865,7 +865,7 @@ class ProductGrid extends StatelessWidget {
           mainAxisSpacing: 30,
           crossAxisSpacing: 20,
           childAspectRatio:
-              0.7, // Increased from 0.65 to reduce empty space at bottom
+              0.62, // Reduced to give more height for the card content
         ),
         itemBuilder: (context, index) {
           return RepaintBoundary(
@@ -915,10 +915,10 @@ class _ProductCardState extends State<ProductCard> {
           // Main Background Card
           Container(
             margin: const EdgeInsets.only(
-              top: 70, // Reduced from 80 to pull the box up
+              top: 80, // Moved down slightly to provide more room for image
             ),
             padding: const EdgeInsets.only(
-              top: 40, // Reduced from 45 to be more compact
+              top: 55, // Increased padding to avoid overlap with image
               left: 14,
               right: 14,
               bottom: 12,
@@ -1070,7 +1070,7 @@ class _ProductCardState extends State<ProductCard> {
           ),
           // Heart Icon for Favorites
           Positioned(
-            top: 90,
+            top: 100,
             right: 15,
             child: GestureDetector(
               onTap: () {
