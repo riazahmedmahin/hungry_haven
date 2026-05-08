@@ -512,8 +512,8 @@ class _OfferBannerState extends State<OfferBanner> {
       "buttonText": "Order Now",
       "image":
           "https://pngimg.com/uploads/burger_sandwich/burger_sandwich_PNG4135.png",
-      "colors": [Color(0xFF42A5F5), Color(0xFF1976D2)],
-      "shadow": Color(0xFF1976D2),
+      "colors": [Color(0xFFFF9472), Color.fromARGB(255, 255, 57, 2)],
+      "shadow": Color(0xFFFF6A42),
       "productIndex": 8,
     },
   ];
@@ -574,7 +574,9 @@ class _OfferBannerState extends State<OfferBanner> {
     String displayTitle = banner["title"];
     if (product != null) {
       if (product.discount == "No") {
-        displayTitle = banner["productIndex"] == 7 ? "Special\nFor You" : "Hot Deal\nFresh Now";
+        displayTitle = banner["productIndex"] == 7
+            ? "Special\nFor You"
+            : "Hot Deal\nFresh Now";
       } else {
         // Clean up discount string (remove leading - if present, and add % Off if it's just a number)
         String cleanDiscount = product.discount.startsWith('-')
@@ -605,9 +607,7 @@ class _OfferBannerState extends State<OfferBanner> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductDetailsScreen(
-                product: product,
-              ),
+              builder: (context) => ProductDetailsScreen(product: product),
             ),
           );
         }
@@ -677,9 +677,8 @@ class _OfferBannerState extends State<OfferBanner> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProductDetailsScreen(
-                              product: product,
-                            ),
+                            builder: (context) =>
+                                ProductDetailsScreen(product: product),
                           ),
                         );
                       }
@@ -983,7 +982,8 @@ class _ProductCardState extends State<ProductCard> {
                 // Discount Badge (Fixed height to maintain alignment)
                 SizedBox(
                   height: 22,
-                  child: (product.discount != "No" && product.discount.isNotEmpty)
+                  child:
+                      (product.discount != "No" && product.discount.isNotEmpty)
                       ? Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
@@ -1112,7 +1112,11 @@ class _ProductCardState extends State<ProductCard> {
                         color: Colors.grey.shade100,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 40),
+                      child: const Icon(
+                        Icons.fastfood,
+                        color: Colors.grey,
+                        size: 40,
+                      ),
                     ),
                   )
                 : Image.file(
@@ -1127,7 +1131,11 @@ class _ProductCardState extends State<ProductCard> {
                         color: Colors.grey.shade100,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 40),
+                      child: const Icon(
+                        Icons.fastfood,
+                        color: Colors.grey,
+                        size: 40,
+                      ),
                     ),
                   ),
           ),

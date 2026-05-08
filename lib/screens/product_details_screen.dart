@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
 import 'cart_screen.dart';
 import 'checkout_screen.dart';
@@ -256,7 +257,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
 
                   const SizedBox(height: 10), // Reduced from 15
-                  const IngredientShowcase(),
+                  IngredientShowcase(ingredients: widget.product.ingredients),
 
                   SizedBox(height: MediaQuery.of(context).padding.bottom + 110),
                 ],
@@ -447,103 +448,78 @@ class SimpleHeaderClipper extends CustomClipper<Path> {
 }
 
 class IngredientShowcase extends StatefulWidget {
-  const IngredientShowcase({super.key});
+  final List<Map<String, dynamic>> ingredients;
+  const IngredientShowcase({super.key, required this.ingredients});
 
   @override
   State<IngredientShowcase> createState() => _IngredientShowcaseState();
 }
 
 class _IngredientShowcaseState extends State<IngredientShowcase> {
-  final List<Map<String, dynamic>> ingredients = [
-    {
-      "title": "Onions",
-      "image": "https://pngimg.com/uploads/onion/small/onion_PNG603.png",
-      "color": Color(0xFFE0C097),
-      "glow": Color(0xFFD32F2F).withOpacity(0.3),
-      "gradient": [Color(0xFFE0C097), Color(0xFFB88E5E)],
-    },
-    {
-      "title": "Tomato",
-      "image": "https://pngimg.com/uploads/tomato/small/tomato_PNG12567.png",
-      "color": Color(0xFFFF5252),
-      "glow": Color(0xFFFF5252).withOpacity(0.4),
-      "gradient": [Color(0xFFFF8A80), Color(0xFFD32F2F)],
-    },
-    {
-      "title": "Cheese",
-      "image": "https://pngimg.com/uploads/cheese/small/cheese_PNG11.png",
-      "color": Color(0xFFFFCA28),
-      "glow": Color(0xFFFFB300).withOpacity(0.4),
-      "gradient": [Color(0xFFFFEE58), Color(0xFFFFCA28)],
-    },
-    {
-      "title": "Basil",
-      "image": "https://pngimg.com/uploads/basil/small/basil_PNG7.png",
-      "color": Color(0xFF66BB6A),
-      "glow": Color(0xFF66BB6A).withOpacity(0.4),
-      "gradient": [Color(0xFFA5D6A7), Color(0xFF388E3C)],
-    },
-    {
-      "title": "Egg",
-      "image": "https://pngimg.com/uploads/egg/small/egg_PNG97961.png",
-      "color": Color(0xFFFFE082),
-      "glow": Color(0xFFFFC107).withOpacity(0.5),
-      "gradient": [Color(0xFFFFF176), Color(0xFFFFA000)],
-    },
-    {
-      "title": "Pepper",
-      "image": "https://pngimg.com/uploads/pepper/small/pepper_PNG3245.png",
-      "color": Color(0xFFEF5350),
-      "glow": Color(0xFFEF5350).withOpacity(0.4),
-      "gradient": [Color(0xFFFF8A80), Color(0xFFC62828)],
-    },
-  ];
-
-  late ScrollController _scrollController;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController(initialScrollOffset: 2 * 90.0);
+    // Start at the middle item if available
+    int initialPage =
+        widget.ingredients.isNotEmpty ? (widget.ingredients.length / 2).floor() : 0;
+    _pageController = PageController(
+      viewportFraction: 0.22, // Reduced from 0.28 to bring items closer
+      initialPage: initialPage,
+    );
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.ingredients.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Text(
+          "Ingredients info not available.",
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+      );
+    }
+
     return SizedBox(
-      height: 170,
+      height: 180,
       child: AnimatedBuilder(
-        animation: _scrollController,
+        animation: _pageController,
         builder: (context, child) {
-          double offset = _scrollController.hasClients
-              ? _scrollController.offset
-              : 2 * 90.0;
-          return ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width / 2 - 45,
-            ),
-            itemCount: ingredients.length,
+          return PageView.builder(
+            controller: _pageController,
+            clipBehavior: Clip.none,
+            itemCount: widget.ingredients.length,
             itemBuilder: (context, index) {
-              double itemPosition = index * 90.0;
-              double distance = (offset - itemPosition).abs();
-              double scale = (1.0 - (distance / 250).clamp(0.0, 0.4));
-              double shift = math.pow((distance / 80), 2) * 20;
-              if (shift > 60) shift = 60;
-              bool isFocused = distance < 45;
+              double pageOffset = 0.0;
+              if (_pageController.position.haveDimensions) {
+                pageOffset = _pageController.page! - index;
+              } else {
+                // Handle initial state before first frame
+                pageOffset = (_pageController.initialPage - index).toDouble();
+              }
+
+              double distance = pageOffset.abs();
+
+              // Scaling and shifting based on page distance
+              double scale = (1.0 - (distance * 0.35).clamp(0.0, 0.45));
+              double shift = math.pow(distance, 2) * 45;
+              if (shift > 80) shift = 80;
+
+              bool isFocused = distance < 0.5;
 
               return GestureDetector(
                 onTap: () {
-                  _scrollController.animateTo(
-                    itemPosition,
-                    duration: const Duration(milliseconds: 500),
+                  _pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 600),
                     curve: Curves.easeOutBack,
                   );
                 },
@@ -551,10 +527,7 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
                   offset: Offset(0, shift),
                   child: Transform.scale(
                     scale: scale,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: _buildMeltyItem(ingredients[index], isFocused),
-                    ),
+                    child: _buildMeltyItem(widget.ingredients[index], isFocused),
                   ),
                 ),
               );
@@ -568,93 +541,61 @@ class _IngredientShowcaseState extends State<IngredientShowcase> {
   Widget _buildMeltyItem(Map<String, dynamic> data, bool isFocused) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Stack(
           alignment: Alignment.center,
-          clipBehavior: Clip.none, // Ensure drips are not clipped
+          clipBehavior: Clip.none,
           children: [
-            // Organic Teardrop Effect (The 'Jul Jule' part)
             if (isFocused) ...[
-              // Primary Organic Drop
               Positioned(
-                bottom: -15,
+                bottom: -25,
                 child: CustomPaint(
-                  size: const Size(25, 40),
-                  painter: TeardropPainter(
-                    color: (data['gradient'] as List<Color>)[1],
-                  ),
-                ),
-              ),
-              // Secondary Small Organic Drop
-              Positioned(
-                bottom: 5,
-                right: 15,
-                child: CustomPaint(
-                  size: const Size(12, 25),
-                  painter: TeardropPainter(
-                    color: (data['gradient'] as List<Color>)[1].withOpacity(
-                      0.7,
-                    ),
-                  ),
+                  size: const Size(45, 70),
+                  painter: TeardropPainter(color: data['color']),
                 ),
               ),
             ],
-            // Background Circle
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: isFocused ? 95 : 70,
-              height: isFocused ? 95 : 70,
+              width: isFocused ? 100 : 75,
+              height: isFocused ? 100 : 75,
               decoration: BoxDecoration(
-                color: isFocused ? null : Colors.white,
+                gradient: LinearGradient(
+                  colors: data['gradient'] as List<Color>,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: isFocused
-                        ? data['glow']
-                        : Colors.black.withOpacity(0.05),
+                    color: (data['glow'] as Color)
+                        .withOpacity(isFocused ? 0.45 : 0.15),
                     blurRadius: isFocused ? 25 : 10,
-                    spreadRadius: isFocused ? 2 : 0,
+                    offset: const Offset(0, 8),
                   ),
                 ],
-                gradient: isFocused
-                    ? RadialGradient(colors: data['gradient'])
-                    : null,
               ),
-            ),
-            // Content
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.network(
-                  data['image'],
-                  width: isFocused ? 45 : 35,
-                  height: isFocused ? 45 : 35,
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: data['image'],
+                  width: isFocused ? 55 : 40,
+                  height: isFocused ? 55 : 40,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.restaurant, size: 20),
                 ),
-                if (isFocused)
-                  Text(
-                    data['title'],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 12,
-                      color: data['color'].computeLuminance() > 0.5
-                          ? Colors.black87
-                          : Colors.white,
-                    ),
-                  ),
-              ],
+              ),
             ),
           ],
         ),
-        if (!isFocused) ...[
-          const SizedBox(height: 8),
-          Text(
-            data['title'],
-            style: const TextStyle(fontSize: 10, color: Colors.grey),
+        const SizedBox(height: 12),
+        Text(
+          data['title'],
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: isFocused ? FontWeight.bold : FontWeight.w500,
+            color: isFocused ? Colors.black87 : Colors.grey.shade500,
           ),
-        ],
+        ),
       ],
     );
   }
@@ -675,9 +616,7 @@ class TeardropPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     var path = Path();
-    // Start at top center
     path.moveTo(size.width / 2, 0);
-    // Left side curve to bottom center
     path.cubicTo(
       0,
       size.height * 0.4,
@@ -686,7 +625,6 @@ class TeardropPainter extends CustomPainter {
       size.width / 2,
       size.height,
     );
-    // Right side curve back to top center
     path.cubicTo(
       size.width,
       size.height,
@@ -696,7 +634,6 @@ class TeardropPainter extends CustomPainter {
       0,
     );
     path.close();
-
     canvas.drawPath(path, paint);
   }
 

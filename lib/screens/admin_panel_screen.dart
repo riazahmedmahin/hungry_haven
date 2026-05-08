@@ -1243,6 +1243,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     if (isEditing && !product.image.startsWith('http')) {
       pickedImage = File(product.image);
     }
+    final List<Map<String, dynamic>> selectedIngredients =
+        isEditing ? List<Map<String, dynamic>>.from(product.ingredients) : [];
 
     void pickImage(StateSetter setModalState) async {
       final picker = ImagePicker();
@@ -1402,6 +1404,87 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       "Discount",
                       Icons.local_offer,
                     ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      "Select Ingredients",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: allAvailableIngredients.length,
+                        itemBuilder: (context, idx) {
+                          final ing = allAvailableIngredients[idx];
+                          final isSelected = selectedIngredients
+                              .any((e) => e['title'] == ing['title']);
+                          return GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                if (isSelected) {
+                                  selectedIngredients.removeWhere(
+                                      (e) => e['title'] == ing['title']);
+                                } else {
+                                  selectedIngredients.add(ing);
+                                }
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              width: 80,
+                              margin: const EdgeInsets.only(right: 12),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Colors.blue.shade50
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Colors.blueAccent
+                                      : Colors.grey.shade200,
+                                  width: 2,
+                                ),
+                                boxShadow: isSelected
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.blueAccent
+                                              .withOpacity(0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        )
+                                      ]
+                                    : [],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl: ing['image'],
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    ing['title'],
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: isSelected
+                                          ? Colors.blueAccent
+                                          : Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 30),
                     Row(
                       children: [
@@ -1450,6 +1533,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                                             product.stock;
                                     product.discount = discountCtrl.text;
                                     product.image = imageCtrl.text;
+                                    product.ingredients = selectedIngredients;
                                   } else {
                                     newDemoProducts.add(
                                       Product(
@@ -1471,6 +1555,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                                         discount: discountCtrl.text,
                                         stock:
                                             int.tryParse(stockCtrl.text) ?? 10,
+                                        ingredients: selectedIngredients,
                                       ),
                                     );
                                   }

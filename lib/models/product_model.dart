@@ -12,6 +12,7 @@ class Product {
   int quantity;
   bool isFavorite;
   int stock;
+  List<Map<String, dynamic>> ingredients;
 
   Product({
     required this.id,
@@ -25,8 +26,54 @@ class Product {
     this.quantity = 0,
     this.isFavorite = false,
     this.stock = 10,
+    this.ingredients = const [],
   });
 }
+
+final List<Map<String, dynamic>> allAvailableIngredients = [
+  {
+    "title": "Onions",
+    "image": "https://pngimg.com/uploads/onion/small/onion_PNG603.png",
+    "color": Color(0xFFE0C097),
+    "glow": Color(0xFFD32F2F), // withOpacity will be applied in UI
+    "gradient": [Color(0xFFE0C097), Color(0xFFB88E5E)],
+  },
+  {
+    "title": "Tomato",
+    "image": "https://pngimg.com/uploads/tomato/small/tomato_PNG12567.png",
+    "color": Color(0xFFFF5252),
+    "glow": Color(0xFFFF5252),
+    "gradient": [Color(0xFFFF8A80), Color(0xFFD32F2F)],
+  },
+  {
+    "title": "Cheese",
+    "image": "https://pngimg.com/uploads/cheese/small/cheese_PNG11.png",
+    "color": Color(0xFFFFCA28),
+    "glow": Color(0xFFFFB300),
+    "gradient": [Color(0xFFFFEE58), Color(0xFFFFCA28)],
+  },
+  {
+    "title": "Basil",
+    "image": "https://pngimg.com/uploads/basil/small/basil_PNG7.png",
+    "color": Color(0xFF66BB6A),
+    "glow": Color(0xFF66BB6A),
+    "gradient": [Color(0xFFA5D6A7), Color(0xFF388E3C)],
+  },
+  {
+    "title": "Egg",
+    "image": "https://pngimg.com/uploads/egg/small/egg_PNG97961.png",
+    "color": Color(0xFFFFE082),
+    "glow": Color(0xFFFFC107),
+    "gradient": [Color(0xFFFFF176), Color(0xFFFFA000)],
+  },
+  {
+    "title": "Pepper",
+    "image": "https://pngimg.com/uploads/pepper/small/pepper_PNG3245.png",
+    "color": Color(0xFFEF5350),
+    "glow": Color(0xFFEF5350),
+    "gradient": [Color(0xFFFF8A80), Color(0xFFC62828)],
+  },
+];
 
 double totalAdminSales = 0.0;
 List<String> adminNotifications = [];
@@ -42,6 +89,14 @@ List<Product> newDemoProducts = [
     discount: "-25%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 2,
@@ -52,6 +107,14 @@ List<Product> newDemoProducts = [
     discount: "-25%",
     inCart: true,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 3,
@@ -63,6 +126,14 @@ List<Product> newDemoProducts = [
     discount: "-10%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 4,
@@ -73,6 +144,14 @@ List<Product> newDemoProducts = [
     discount: "-15%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 5,
@@ -83,6 +162,14 @@ List<Product> newDemoProducts = [
     discount: "-10%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 6,
@@ -93,6 +180,14 @@ List<Product> newDemoProducts = [
     discount: "-20%",
     inCart: false,
     category: "Drinks",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 7,
@@ -104,6 +199,14 @@ List<Product> newDemoProducts = [
     discount: "New",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 8,
@@ -114,6 +217,14 @@ List<Product> newDemoProducts = [
     discount: "-25%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
   Product(
     id: 9,
@@ -125,6 +236,14 @@ List<Product> newDemoProducts = [
     discount: "-10%",
     inCart: false,
     category: "Food",
+    ingredients: [
+      allAvailableIngredients[0],
+      allAvailableIngredients[1],
+      allAvailableIngredients[4],
+      allAvailableIngredients[5],
+      allAvailableIngredients[3],
+      allAvailableIngredients[2],
+    ],
   ),
 ];
 
